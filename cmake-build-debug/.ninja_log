@@ -1,0 +1,12 @@
+# ninja log v5
+2	301	6990697760879130	CMakeFiles/COD.dir/main.cpp.obj	94153bb615679853
+302	648	6990697764290000	COD.exe	1c9bc33862bf8b26
+1	325	6990717799928640	build.ninja	177e6ab7a21fec97
+2	484	6990695186174231	CMakeFiles/COD.dir/ExtendedEuclideanAlgorithm.cpp.obj	8c61538805e1d74e
+7	450	6990694420563435	CMakeFiles/COD.dir/EuclideanAlgorithm.cpp.obj	e4253c167e2253c8
+10	62	6987961848929439	CMakeFiles/COD.dir/ChineseRemainderAlgorithm.cpp.obj	13907cd69fa1cffd
+11	57	6990717905758510	CMakeFiles/COD.dir/ChineseRemainderAlgorithm.cpp.obj	761afd57e2cfbbe1
+2	311	6990717908299056	CMakeFiles/COD.dir/main.cpp.obj	cb06d27b04ce6db1
+8	438	6990717909569423	CMakeFiles/COD.dir/ExtendedEuclideanAlgorithm.cpp.obj	1a5b092106400a9
+5	443	6990717909619281	CMakeFiles/COD.dir/EuclideanAlgorithm.cpp.obj	10283f51f175cd3
+444	795	6990717913080187	COD.exe	1c9bc33862bf8b26

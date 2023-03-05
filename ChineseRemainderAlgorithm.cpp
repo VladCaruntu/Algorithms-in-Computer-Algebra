@@ -25,17 +25,7 @@ int ChineseRemainderAlgorithm::chineseRemainderAlgorithm(std::vector<std::pair<i
     }
     std::cout<<result;
     result = result % M;
-
-//    std::cout<<M<<"\n"; //delete
-//    for (size_t pairs = 0; pairs < nrEq; pairs++) {
-//        std::cout<<mValues.at(pairs)<<" ";
-//    }
-//    std::cout<<"\n";
-//    for (size_t pairs = 0; pairs < nrEq; pairs++) {
-//        std::cout<<mInverses.at(pairs)<<" ";
-//    }
     std::cout<<"\n";
-    //delete
 
     return result;
 }

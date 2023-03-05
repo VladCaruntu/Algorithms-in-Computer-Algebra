@@ -9,5 +9,4 @@ public:
     static int chineseRemainderAlgorithm(std::vector<std::pair<int, int>>&);
 };
 
-
 #endif

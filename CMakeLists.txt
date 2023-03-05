@@ -10,5 +10,9 @@ add_executable(
         EuclideanAlgorithm.cpp
         EuclideanAlgorithm.h
         ChineseRemainderAlgorithm.cpp
-        ChineseRemainderAlgorithm.h ExtendedEuclideanAlgorithm.cpp ExtendedEuclideanAlgorithm.h)
+        ChineseRemainderAlgorithm.h
+        ExtendedEuclideanAlgorithm.cpp
+        ExtendedEuclideanAlgorithm.h
+        Interpolation.cpp
+        Interpolation.h)
 target_link_libraries(COD ${Boost_LIBRARIES})

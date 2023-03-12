@@ -14,5 +14,5 @@ add_executable(
         ExtendedEuclideanAlgorithm.cpp
         ExtendedEuclideanAlgorithm.h
         Interpolation.cpp
-        Interpolation.h)
+        Interpolation.h FastFourierTransform.cpp FastFourierTransform.h)
 target_link_libraries(COD ${Boost_LIBRARIES})

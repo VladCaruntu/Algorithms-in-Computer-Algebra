@@ -42,30 +42,33 @@ int main() {
 //        std::cout << d << " ";
 //    }
 
-    boost::rational<int> a = boost::rational<int>(2,3);
-    boost::rational<int> b = boost::rational<int>(3,2);
-    boost::rational<int> c = boost::rational<int>(4,2);
-
-    std::cout << "a = " << a << " b = " << b << " c = " << c << "\n";
-    std::cout << "a * b = " << a * b << "\n";
-    std::cout << "a / b = " << a / b << "\n";
-    std::cout << "a + b = " << a + b << "\n";
-    std::cout << "a - b = " << a - b << "\n";
-    std::cout << "a > b: " << std::boolalpha << (a > b) << "\n";
-    std::cout << "a < b: " << std::boolalpha << (a < b) << "\n";
+//    boost::rational<int> a = boost::rational<int>(-2,3);
+//    boost::rational<int> b = boost::rational<int>(3,2);
+//    boost::rational<int> c = boost::rational<int>(4,2);
+//
+//    std::cout << "a = " << a << " b = " << b << " c = " << c << "\n";
+//    std::cout << "a * b = " << a * b << "\n";
+//    std::cout << "a / b = " << a / b << "\n";
+//    std::cout << "a + b = " << a + b << "\n";
+//    std::cout << "a - b = " << a - b << "\n";
+//    std::cout << "a > b: " << std::boolalpha << (a > b) << "\n";
+//    std::cout << "a < b: " << std::boolalpha << (a < b) << "\n";
 
     std::unique_ptr<Polynomial> p1 = std::make_unique<Polynomial>();
     p1->addTerm(std::make_pair(boost::rational<int>(2,3), 4));
     p1->addTerm(std::make_pair(boost::rational<int>(2,4), 3));
+    p1->addTerm(std::make_pair(boost::rational<int>(-21,4), 3));
     p1->addTerm(std::make_pair(boost::rational<int>(-5,2),0));
-    p1->addTerm(std::make_pair(boost::rational<int>(-11, 5),2));
+    p1->addTerm(std::make_pair(boost::rational<int>(10,2),0));
+    p1->addTerm(std::make_pair(boost::rational<int>(-11, 5),5));
+    p1->addTerm(std::make_pair(boost::rational<int>(19, 4),3));
+    p1->addTerm(std::make_pair(boost::rational<int>(11, 5),5));
     p1->addTerm(std::make_pair(boost::rational<int>(9, 11),2));
-//    p1->addTerm(std::make_pair(5,3));
     p1->addTerm(std::make_pair(38,1));
     
     std::unique_ptr<Polynomial> p2 = std::make_unique<Polynomial>();
-    p2->addTerm(std::make_pair(1,1));
-    p2->addTerm(std::make_pair(-7,0));
+//    p2->addTerm(std::make_pair(1,1));
+    p2->addTerm(std::make_pair(-7,2));
 
     p1->printPoly();
     return 0;

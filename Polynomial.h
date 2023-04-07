@@ -17,7 +17,7 @@ public:
     void subtractPoly(const Polynomial&);
     Polynomial multiplyPoly(Polynomial&);
 
-    bool isSorted;
+    bool isProcessed = false;
 };
 
 #endif

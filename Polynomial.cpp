@@ -31,7 +31,7 @@ void Polynomial::processPoly() {
         maxDNE = std::max(maxDNE, el.second);
 
     boost::rational<int> tempCoeff{ 0 };
-    this->addTerm(std::make_pair(1, maxDNE + 1));
+    this->terms_.push_back(std::make_pair(1, maxDNE + 1));
 
     while (i < this->terms_.size()) {
         if (this->terms_[i].second == this->terms_[i + 1].second) {
@@ -49,12 +49,13 @@ void Polynomial::processPoly() {
     vect.pop_back();
 
     for (const std::pair<boost::rational<int>, int> el : vect) {
-        p_temp->addTerm(el);
+        if(el.first != 0)
+            p_temp->terms_.push_back(el);
     }
 
     this->terms_.clear();
     for(auto& el : p_temp->terms_){
-        this->addTerm(el);
+        this->terms_.push_back(el);
     }
 }
 
@@ -62,18 +63,16 @@ void Polynomial::addPoly(const Polynomial& p) {
     std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
 
     for(const auto& el: this->terms_){
-        p_temp->addTerm(el);
+        p_temp->terms_.push_back(el);
     }
     for(const auto& el: p.terms_){
-        p_temp->addTerm(el);
+        p_temp->terms_.push_back(el);
     }
-
-    p_temp->processPoly();
 
     this->terms_.clear();
     for(const auto& el : p_temp->terms_){
         if(el.first != 0)
-            this->addTerm(el);
+            this->terms_.push_back(el);
     }
 }
 
@@ -81,19 +80,17 @@ void Polynomial::subtractPoly(const Polynomial& p){
     std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
 
     for(const auto& el: this->terms_){
-        p_temp->addTerm(el);
+        this->terms_.push_back(el);
     }
     for(const auto& el : p.terms_){
         boost::rational<int> temp_coeff = el.first * (-1);
-        p_temp->addTerm(std::make_pair(temp_coeff, el.second));
+        p_temp->terms_.push_back(std::make_pair(temp_coeff, el.second));
     }
-
-    p_temp->processPoly();
 
     this->terms_.clear();
     for(const auto& el : p_temp->terms_){
         if(el.first != 0)
-            this->addTerm(el);
+        this->terms_.push_back(el);
     }
 }
 
@@ -114,69 +111,58 @@ Polynomial Polynomial::multiplyPoly(Polynomial& p){
             tempCoef = coef1 * coef2;
             tempPower = power1 + power2;
             tempPair = std::make_pair(tempCoef, tempPower);
-            p_temp->addTerm(tempPair);
+            p_temp->terms_.push_back(tempPair);
         }
     }
     this->terms_.clear();
     for(const auto& el : p_temp->terms_){
-        this->addTerm(el);
+        this->terms_.push_back(el);
     }
     this->processPoly();
     return *this;
 }
 
 void Polynomial::printPoly() {
-//    if(!this->isSorted){
-//        this->sortPoly();
-//        this->isSorted = true;
-//    }
     this->processPoly();
 
-    boost::rational<int> coef{};
-    int power{};
+    boost::rational<int> coef{this->terms_[0].first};
+    int power{this->terms_[0].second};
 
-    for (size_t i{0}; i < this->terms_.size(); i++) {
+    // for the first term
+    if(power == 1) {
+        std::cout << coef << "x";
+    }
+    else {
+        std::cout << coef << "x^" << power;
+    }
+
+    //for the rest of the terms
+    for (size_t i{1}; i < this->terms_.size(); i++) {
         coef = this->terms_[i].first;
         power = this->terms_[i].second;
 
-        if (power > 1) {
-            if (coef > 1 && i != 0) {
-                std::cout << "+" << coef << "x" << "^" << power;
-            }
-            else if(coef > 1){
-                std::cout << coef << "x" << "^" << power;
-            }
-            else if (coef < 1) {
-                std::cout << coef << "x" << "^" << power;
-            }
-            else if (coef == 1){
-                std::cout << "x" << "^" << power;
-            }
-            else {
-                std::cout << "+" << "x" << "^" << power;
-            }
-        } else if (power == 1) {
-            if (coef > 1 && i != 0) {
-                std::cout << "+" << coef << "x";
-            }
-            else if(coef > 1){
+        if (power == 1) {
+            if (coef < 0) {
                 std::cout << coef << "x";
             }
-            else if (coef < 1) {
+            else {
                 std::cout << "+" << coef << "x";
             }
-            else {
-                std::cout << "x" << "^" << power;
+        }
+        else if (power > 1){
+            if (coef < 0) {
+                std::cout << coef << "x^" << power;
             }
-        } else {
-            if (coef > 0 && i != 0) {
+            else {
+                std::cout << "+" << coef << "x^" << power;
+            }
+        }
+        else {
+            if (coef < 0) {
+                std::cout << coef;
+            }
+            else {
                 std::cout << "+" << coef;
-            }
-            else if(coef > 1){
-                std::cout << coef;
-            }
-            else {
-                std::cout << coef;
             }
         }
     }

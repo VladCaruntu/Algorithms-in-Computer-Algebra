@@ -63,13 +63,25 @@ int main() {
     p1->addTerm(std::make_pair(boost::rational<int>(-11, 5),5));
     p1->addTerm(std::make_pair(boost::rational<int>(19, 4),3));
     p1->addTerm(std::make_pair(boost::rational<int>(11, 5),5));
-    p1->addTerm(std::make_pair(boost::rational<int>(9, 11),2));
-    p1->addTerm(std::make_pair(38,1));
+    p1->addTerm(std::make_pair(boost::rational<int>(2, 3),2));
+    p1->addTerm(std::make_pair(boost::rational<int>(5,4),1));
     
     std::unique_ptr<Polynomial> p2 = std::make_unique<Polynomial>();
-//    p2->addTerm(std::make_pair(1,1));
-    p2->addTerm(std::make_pair(-7,2));
+    p2->addTerm(std::make_pair(boost::rational<int>(5,4), 1));
+    p2->addTerm(std::make_pair(boost::rational<int>(2,3), 2));
 
     p1->printPoly();
+    std::unique_ptr<Polynomial> p3 = std::make_unique<Polynomial>(Polynomial::addPoly(*p1, *p2));
+//    p3->printPoly();
+
+//    p2->addTerm(std::make_pair(boost::rational<int>(19,3),2));
+//    p3 = std::make_unique<Polynomial>(Polynomial::addPoly(*p1, *p2));
+    p2->printPoly();
+
+    std::unique_ptr<Polynomial> p4 = std::make_unique<Polynomial>(Polynomial::subtractPoly(*p1, *p2));
+//    p4->printPoly();
+
+    std::unique_ptr<Polynomial> p5 = std::make_unique<Polynomial>(Polynomial::multiplyPoly(*p1, *p2));
+    p5->printPoly();
     return 0;
 }

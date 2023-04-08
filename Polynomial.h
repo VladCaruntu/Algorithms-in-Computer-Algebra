@@ -13,9 +13,9 @@ public:
     void addTerm(const std::pair<boost::rational<int>, int>&);
     std::vector<std::pair<boost::rational<int>, int>> getTerms(const Polynomial&);
     void printPoly();
-    void addPoly(const Polynomial&);
-    void subtractPoly(const Polynomial&);
-    Polynomial multiplyPoly(Polynomial&);
+    static Polynomial addPoly(const Polynomial&, const Polynomial&);
+    static Polynomial subtractPoly(const Polynomial&, const Polynomial&);
+    static Polynomial multiplyPoly(const Polynomial&, const Polynomial&);
 
     bool isProcessed = false;
 };

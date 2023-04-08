@@ -59,42 +59,40 @@ void Polynomial::processPoly() {
     }
 }
 
-void Polynomial::addPoly(const Polynomial& p) {
+Polynomial Polynomial::addPoly(const Polynomial& p1, const Polynomial& p2) {
     std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
 
-    for(const auto& el: this->terms_){
-        p_temp->terms_.push_back(el);
-    }
-    for(const auto& el: p.terms_){
+    for(const auto& el : p1.terms_){
         p_temp->terms_.push_back(el);
     }
 
-    this->terms_.clear();
-    for(const auto& el : p_temp->terms_){
-        if(el.first != 0)
-            this->terms_.push_back(el);
+    for(const auto& el : p2.terms_){
+        p_temp->terms_.push_back(el);
     }
+
+    p_temp->processPoly();
+    p_temp->isProcessed = true;
+    return *p_temp;
 }
 
-void Polynomial::subtractPoly(const Polynomial& p){
+Polynomial Polynomial::subtractPoly(const Polynomial& p1, const Polynomial& p2){
     std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
 
-    for(const auto& el: this->terms_){
-        this->terms_.push_back(el);
+    for(const auto& el: p1.terms_){
+        p_temp->terms_.push_back(el);
     }
-    for(const auto& el : p.terms_){
+
+    for(const auto& el : p2.terms_){
         boost::rational<int> temp_coeff = el.first * (-1);
         p_temp->terms_.push_back(std::make_pair(temp_coeff, el.second));
     }
 
-    this->terms_.clear();
-    for(const auto& el : p_temp->terms_){
-        if(el.first != 0)
-        this->terms_.push_back(el);
-    }
+    p_temp->processPoly();
+    p_temp->isProcessed = true;
+    return *p_temp;
 }
 
-Polynomial Polynomial::multiplyPoly(Polynomial& p){
+Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2){
     std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
 
     int power1, power2;
@@ -102,28 +100,28 @@ Polynomial Polynomial::multiplyPoly(Polynomial& p){
     int tempPower;
     std::pair<boost::rational<int>, int> tempPair;
 
-    for(size_t i{0}; i < this->terms_.size(); i++){
-        coef1 = this->terms_[i].first;
-        power1 = this->terms_[i].second;
-        for(size_t j{0}; j < p.terms_.size(); j++){
-            coef2 = p.terms_[j].first;
-            power2 = p.terms_[j].second;
+    for(size_t i{0}; i < p1.terms_.size(); i++){
+        coef1 = p1.terms_[i].first;
+        power1 = p1.terms_[i].second;
+        for(size_t j{0}; j < p2.terms_.size(); j++){
+            coef2 = p2.terms_[j].first;
+            power2 = p2.terms_[j].second;
             tempCoef = coef1 * coef2;
             tempPower = power1 + power2;
             tempPair = std::make_pair(tempCoef, tempPower);
             p_temp->terms_.push_back(tempPair);
         }
     }
-    this->terms_.clear();
-    for(const auto& el : p_temp->terms_){
-        this->terms_.push_back(el);
-    }
-    this->processPoly();
-    return *this;
+    p_temp->processPoly();
+    p_temp->isProcessed = true;
+    return *p_temp;
 }
 
 void Polynomial::printPoly() {
-    this->processPoly();
+    if(!this->isProcessed) {
+        this->processPoly();
+        this->isProcessed = true;
+    }
 
     boost::rational<int> coef{this->terms_[0].first};
     int power{this->terms_[0].second};
@@ -166,5 +164,5 @@ void Polynomial::printPoly() {
             }
         }
     }
-    std::cout << "=0";
+    std::cout << "=0\n";
 }

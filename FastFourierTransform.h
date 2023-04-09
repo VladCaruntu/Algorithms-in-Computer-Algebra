@@ -7,8 +7,8 @@
 
 class FastFourierTransform {
 public:
-    static std::vector<double> FFT(std::vector<double>&);
-    static std::vector<double> IFFT(std::vector<double>&);
+    static void FFT(std::vector<std::complex<double>>&, int);
+    static std::vector<int> multiply (std::vector<int>&, std::vector<int>&);
 };
 
 #endif

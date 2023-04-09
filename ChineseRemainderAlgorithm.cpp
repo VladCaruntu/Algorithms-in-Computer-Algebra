@@ -1,31 +1,45 @@
 #include "ChineseRemainderAlgorithm.h"
+#include "ExtendedEuclideanAlgorithm.h"
 #include <iostream>
+#include <chrono>
+#include <iomanip>
 
-int ChineseRemainderAlgorithm::chineseRemainderAlgorithm(std::vector<std::pair<int, int>>& equations){
-    int M{1}; // the value of the product of the moduli
-    std::vector<int> mValues{}; // this will contain the values of m1, m2, m3 ... and so on
-    std::vector<int> mInverses{};
-    int result{0};
-    size_t nrEq = equations.size();
+int ChineseRemainderAlgorithm::chineseRemainderAlgorithm(std::vector<std::pair<int, int>>& equations, bool flag){
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
 
-    for (size_t pairs = 0; pairs < nrEq; pairs++){
-        M *= equations[pairs].second;
+    std::vector<int> moduli;
+    std::vector<int> result;
+
+    for(auto & equation : equations){
+        moduli.push_back(equation.first);
+        result.push_back(equation.second);
     }
 
-    for (size_t pairs = 0; pairs < nrEq; pairs++) {
-        mValues.emplace_back(M / equations[pairs].second);
+    int M = 1;
+    int x = 0;
+    int y, z;
+
+    // Calculate the product of all the moduli
+    for (size_t i = 0; i < result.size(); i++) {
+        M *= result[i];
     }
 
-    for (size_t pairs = 0; pairs < nrEq; pairs++) {
-        mInverses.emplace_back(mValues[pairs] % equations[pairs].second);
+    // Calculate each term in the sum
+    int Mi;
+    for (size_t i = 0; i < moduli.size(); i++) {
+        Mi = M / result[i];
+        ExtendedEuclideanAlgorithm::extendedEuclideanAlgorithm(Mi, result[i], y, z);
+        x += moduli[i] * y * Mi;
     }
 
-    for(size_t pairs = 0; pairs < nrEq; pairs++){
-        result += equations[pairs].first * mValues.at(pairs) * mInverses.at(pairs);
-    }
-    std::cout<<result;
-    result = result % M;
-    std::cout<<"\n";
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
 
-    return result;
+    time_taken *= 1e-9;
+    if(flag) {
+        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+                  << std::setprecision(10) << " seconds" << std::endl;
+    }
+    return (x % M + M) % M;
 }

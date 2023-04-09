@@ -27,8 +27,8 @@ int ExtendedEuclideanAlgorithm::extendedEuclideanAlgorithmRunner(int num1, int n
         return num2;
     }
     int x1, y1;  // to store recursive call results
-    int d = extendedEuclideanAlgorithmRunner(num2 % num1, num1, x1, y1, flag);
+    int gcd = extendedEuclideanAlgorithmRunner(num2 % num1, num1, x1, y1, flag);
     x = y1 - (num2 / num1) * x1;
     y = x1;
-    return d;
+    return gcd;
 }

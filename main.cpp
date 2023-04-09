@@ -17,71 +17,50 @@ int main() {
 
     //extended euclidean algorithm
 //    int EuclideanX, EuclideanY;
-//    ExtendedEuclideanAlgorithm::extendedEuclideanAlgorithm(102, 38, EuclideanX, EuclideanY, true);
+//    ExtendedEuclideanAlgorithm::extendedEuclideanAlgorithm(35, 15, EuclideanX, EuclideanY, true);
 //    printf("x = %d, y = %d\n", EuclideanX, EuclideanY);
 
     //chinese remainder algorithm
-//    std::vector < std::pair < int, int > > vector;
-//    vector.emplace_back(std::make_pair(1,2));
+//    std::vector <std::pair<int, int>> vector;
 //    vector.emplace_back(std::make_pair(2,3));
 //    vector.emplace_back(std::make_pair(3,5));
-//    vector.emplace_back(std::make_pair(4,11));
-//    vector.emplace_back(std::make_pair(2,11));
-//    std::cout << ChineseRemainderAlgorithm::chineseRemainderAlgorithm(vector);
+//    vector.emplace_back(std::make_pair(2,7));
+//    std::cout << ChineseRemainderAlgorithm::chineseRemainderAlgorithm(vector, true);
+    // interpolation
+//    std::vector<double> x = {0, 1, 2, 3, 4};
+//    std::vector<double> y = {1, 4, 7, 10, 18};
+//    std::cout << Interpolation::linearInterpolation(x, y, 0.5, true);
 
-//    std::cout << Interpolation::linearInterpolation({1.1555, 200}, {1.17608, 212}, 220, true);
+//FFT
+    std::vector<int> a = {2,5,6};//2x^2+5x+6
+    std::vector<int> b = {3,3,8};//3x^2+3x+8
+    std::vector<int> c = FastFourierTransform::multiply(a, b);
+    for (int i = 0; i < c.size(); ++i) {
+        std::cout << c[i] << " ";
+    }
 
-//    std::vector<double> v{2,5,3,1};
-//    std::vector<double> result1 = FastFourierTransform::FFT(v);
-//    for(double d: result1){
-//        std::cout << d << " ";
-//    }
-//    std::cout<<"\n";
-//    std::vector<double> result2 = FastFourierTransform::IFFT(result1);
-//    for(double d: result2){
-//        std::cout << d << " ";
-//    }
-
-//    boost::rational<int> a = boost::rational<int>(-2,3);
-//    boost::rational<int> b = boost::rational<int>(3,2);
-//    boost::rational<int> c = boost::rational<int>(4,2);
+//    std::unique_ptr<Polynomial> p1 = std::make_unique<Polynomial>();
+//    p1->addTerm(std::make_pair(boost::rational<int>(2,3), 4));
+//    p1->addTerm(std::make_pair(boost::rational<int>(2,4), 3));
+//    p1->addTerm(std::make_pair(boost::rational<int>(-21,4), 3));
+//    p1->addTerm(std::make_pair(boost::rational<int>(-5,2),0));
+//    p1->addTerm(std::make_pair(boost::rational<int>(10,2),0));
+//    p1->addTerm(std::make_pair(boost::rational<int>(-11, 5),5));
+//    p1->addTerm(std::make_pair(boost::rational<int>(19, 4),3));
+//    p1->addTerm(std::make_pair(boost::rational<int>(11, 5),5));
+//    p1->addTerm(std::make_pair(boost::rational<int>(2, 3),2));
+//    p1->addTerm(std::make_pair(boost::rational<int>(5,4),1));
 //
-//    std::cout << "a = " << a << " b = " << b << " c = " << c << "\n";
-//    std::cout << "a * b = " << a * b << "\n";
-//    std::cout << "a / b = " << a / b << "\n";
-//    std::cout << "a + b = " << a + b << "\n";
-//    std::cout << "a - b = " << a - b << "\n";
-//    std::cout << "a > b: " << std::boolalpha << (a > b) << "\n";
-//    std::cout << "a < b: " << std::boolalpha << (a < b) << "\n";
+//    std::unique_ptr<Polynomial> p2 = std::make_unique<Polynomial>();
+//    p2->addTerm(std::make_pair(boost::rational<int>(5,4), 1));
+//    p2->addTerm(std::make_pair(boost::rational<int>(2,3), 2));
 
-    std::unique_ptr<Polynomial> p1 = std::make_unique<Polynomial>();
-    p1->addTerm(std::make_pair(boost::rational<int>(2,3), 4));
-    p1->addTerm(std::make_pair(boost::rational<int>(2,4), 3));
-    p1->addTerm(std::make_pair(boost::rational<int>(-21,4), 3));
-    p1->addTerm(std::make_pair(boost::rational<int>(-5,2),0));
-    p1->addTerm(std::make_pair(boost::rational<int>(10,2),0));
-    p1->addTerm(std::make_pair(boost::rational<int>(-11, 5),5));
-    p1->addTerm(std::make_pair(boost::rational<int>(19, 4),3));
-    p1->addTerm(std::make_pair(boost::rational<int>(11, 5),5));
-    p1->addTerm(std::make_pair(boost::rational<int>(2, 3),2));
-    p1->addTerm(std::make_pair(boost::rational<int>(5,4),1));
-    
-    std::unique_ptr<Polynomial> p2 = std::make_unique<Polynomial>();
-    p2->addTerm(std::make_pair(boost::rational<int>(5,4), 1));
-    p2->addTerm(std::make_pair(boost::rational<int>(2,3), 2));
-
-    p1->printPoly();
-    std::unique_ptr<Polynomial> p3 = std::make_unique<Polynomial>(Polynomial::addPoly(*p1, *p2));
+//    p1->printPoly();
+//    std::unique_ptr<Polynomial> p3 = std::make_unique<Polynomial>(Polynomial::addPoly(*p1, *p2, true));
+//    std::unique_ptr<Polynomial> p4 = std::make_unique<Polynomial>(Polynomial::subtractPoly(*p1, *p2, true));
+//    std::unique_ptr<Polynomial> p5 = std::make_unique<Polynomial>(Polynomial::multiplyPoly(*p1, *p2, true));
 //    p3->printPoly();
-
-//    p2->addTerm(std::make_pair(boost::rational<int>(19,3),2));
-//    p3 = std::make_unique<Polynomial>(Polynomial::addPoly(*p1, *p2));
-    p2->printPoly();
-
-    std::unique_ptr<Polynomial> p4 = std::make_unique<Polynomial>(Polynomial::subtractPoly(*p1, *p2));
 //    p4->printPoly();
-
-    std::unique_ptr<Polynomial> p5 = std::make_unique<Polynomial>(Polynomial::multiplyPoly(*p1, *p2));
-    p5->printPoly();
+//    p5->printPoly();
     return 0;
 }

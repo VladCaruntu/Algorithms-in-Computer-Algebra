@@ -1,28 +1,33 @@
 #include "Interpolation.h"
+#include <chrono>
+#include <iomanip>
 
-Point Interpolation::linearInterpolation(const Point& p1, const Point& p2, double givenValue, bool XorY){
-    double x, y;
+//Lagrange method
+double Interpolation::linearInterpolation(std::vector<double>& x, std::vector<double>& y, double wantedX, bool flag){
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
 
-    //if flag is true -> the input is Y, else the input is X
-    if(XorY) {
-        y = givenValue;
-    }
-    else{
-        x = givenValue;
-    }
+    double yi = 0;
+    double currentValue;
 
-    double xMax, xMin, yMax, yMin;
-    xMax = (p1.x > p2.x) ? p1.x : p2.x;
-    xMin = (p1.x < p2.x) ? p1.x : p2.x;
-    yMax = (p1.y > p2.y) ? p1.y : p2.y;
-    yMin = (p1.y < p2.y) ? p1.y : p2.y;
-
-    if(XorY) {
-        x = ((xMax - xMin) * (givenValue - yMin)) / (yMax - yMin) + xMin;
-    }
-    else{
-        y = ((yMax - yMin) * (givenValue - xMin)) / (xMax - xMin) + yMin;
+    int size = x.size();
+    for (int i = 0; i < size; i++){
+        currentValue = 1; // the value of the i-th polynomial at the current x
+        for (int j = 0; j < size; j++) {
+            if (i != j) {
+                currentValue *= (wantedX - x[j]) / (x[i] - x[j]);
+            }
+        }
+        yi += y[i] * currentValue;
     }
 
-    return Point{x, y};
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+    time_taken *= 1e-9;
+    if(flag) {
+        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+                  << std::setprecision(10) << " seconds" << std::endl;
+    }
+    return yi;
 }

@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <chrono>
+#include <iomanip>
 #include "boost/rational.hpp"
 
 void Polynomial::addTerm(const std::pair<boost::rational<int>, int>& term) {
@@ -59,9 +61,11 @@ void Polynomial::processPoly() {
     }
 }
 
-Polynomial Polynomial::addPoly(const Polynomial& p1, const Polynomial& p2) {
-    std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
+Polynomial Polynomial::addPoly(const Polynomial& p1, const Polynomial& p2, bool flag) {
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
 
+    std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
     for(const auto& el : p1.terms_){
         p_temp->terms_.push_back(el);
     }
@@ -72,10 +76,23 @@ Polynomial Polynomial::addPoly(const Polynomial& p1, const Polynomial& p2) {
 
     p_temp->processPoly();
     p_temp->isProcessed = true;
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+    time_taken *= 1e-9;
+    if(flag) {
+        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+                  << std::setprecision(10) << " seconds" << std::endl;
+    }
+
     return *p_temp;
 }
 
-Polynomial Polynomial::subtractPoly(const Polynomial& p1, const Polynomial& p2){
+Polynomial Polynomial::subtractPoly(const Polynomial& p1, const Polynomial& p2, bool flag){
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
     std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
 
     for(const auto& el: p1.terms_){
@@ -89,10 +106,23 @@ Polynomial Polynomial::subtractPoly(const Polynomial& p1, const Polynomial& p2){
 
     p_temp->processPoly();
     p_temp->isProcessed = true;
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+    time_taken *= 1e-9;
+    if(flag) {
+        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+                  << std::setprecision(10) << " seconds" << std::endl;
+    }
+
     return *p_temp;
 }
 
-Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2){
+Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2, bool flag){
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
     std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
 
     int power1, power2;
@@ -114,6 +144,16 @@ Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2){
     }
     p_temp->processPoly();
     p_temp->isProcessed = true;
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+    time_taken *= 1e-9;
+    if(flag) {
+        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+                  << std::setprecision(10) << " seconds" << std::endl;
+    }
+
     return *p_temp;
 }
 

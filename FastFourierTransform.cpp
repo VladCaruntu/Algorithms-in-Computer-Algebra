@@ -1,97 +1,54 @@
 #include "FastFourierTransform.h"
+#include <bits/stdc++.h>
+#include <complex>
 
-//the list is a coefficient representation
-//the size should be a power of 2
+const double PI = acos(-1.0);
 
-//try boost::rational afterwards
+void FastFourierTransform::FFT(std::vector<std::complex<double>>& a, int inv){
+    int n = a.size();
+    if (n == 1) return;
 
-//vector should be of the form {2, 5, 3, 1, 0 ,2}
-//and the powers are like this {5, 4, 3, 2, 1, 0}
-                // 2x^5, 5x^4, 3x^3, x^2, 0x^1, 2x^0
-
-std::vector<double> FastFourierTransform::FFT(std::vector<double>& poly){
-    size_t size = poly.size();
-    if (size == 1)
-        return poly;
-
-    double w = pow((-1), 2 / size);
-//    e ^ (pi * i) = -1
-
-    //coefficients for the odd degree terms and the even degree terms
-    std::vector<double> Pe{};
-    std::vector<double> Po{};
-
-    std::reverse(poly.begin(), poly.end());
-
-    for(size_t i = 0; i < size; i++){
-        //odd powers in Po and even powers in Pe
-        if(size % 2 == 0){   //even -> the other way around
-            if (i % 2 == 0){
-                Po.push_back(poly[i]);
-            }
-            else{
-                Pe.push_back(poly[i]);
-            }
-        }
-        else{  //the normal way
-            if (i % 2 == 0){
-                Pe.push_back(poly[i]);
-            }
-            else{
-                Po.push_back(poly[i]);
-            }
-        }
+    std::vector<std::complex<double>> a0(n / 2), a1(n / 2);
+    for (int i = 0; i < n / 2; i++) {
+        a0[i] = a[2 * i];
+        a1[i] = a[2 * i + 1];
     }
 
-    std::vector<double> ye {FFT(Pe)};
-    std::vector<double> yo {FFT(Po)};
-    std::vector<double> y(size * 1.0, 0);
+    FFT(a0, inv);
+    FFT(a1, inv);
 
-    for(int j = 0; j < size/2; j++){
-        y[j] = ye[j] + pow(w, j) * yo[j];
-        y[j + size/2] = ye[j] - pow(w, j) * yo[j];
+    double ang = 2 * PI / n * inv;
+    std::complex<double> w(1), wn(cos(ang), sin(ang));
+
+    for (int i = 0; i < n / 2; i++) {
+        a[i] = a0[i] + w * a1[i];
+        a[i + n / 2] = a0[i] - w * a1[i];
+        w *= wn;
     }
-
-    return y;
 }
 
-std::vector<double> FastFourierTransform::IFFT(std::vector<double>& poly){
-    size_t size = poly.size();
-    if (size == 1)
-        return poly;
+std::vector<int> FastFourierTransform::multiply(std::vector<int> &a, std::vector<int> &b) {
+    int n = 1;
+    while (n < a.size() + b.size())
+        n *= 2;
 
-    double w = pow((-1), (-2 / size)) * (1 / size);
-    std::vector<double> Pe{};
-    std::vector<double> Po{};
+    std::vector<std::complex<double>> fa(n), fb(n);
+    for (int i = 0; i < a.size(); i++)
+        fa[i] = a[i];
 
-    std::reverse(poly.begin(), poly.end());
+    for (int i = 0; i < b.size(); i++)
+        fb[i] = b[i];
 
-    for(size_t i = 0; i < size; i++){
-        if(size % 2 == 0){
-            if (i % 2 == 0){
-                Po.push_back(poly[i]);
-            }
-            else{
-                Pe.push_back(poly[i]);
-            }
-        }
-        else{
-            if (i % 2 == 0){
-                Pe.push_back(poly[i]);
-            }
-            else{
-                Po.push_back(poly[i]);
-            }
-        }
-    }
+    FFT(fa, 1);
+    FFT(fb, 1);
 
-    std::vector<double> ye {IFFT(Pe)};
-    std::vector<double> yo {IFFT(Po)};
-    std::vector<double> y(size * 1.0, 0);
+    for (int i = 0; i < n; i++)
+        fa[i] *= fb[i];
 
-    for(int j = 0; j < size/2; j++){
-        y[j] = ye[j] + pow(w, j) * yo[j];
-        y[j + size/2] = ye[j] - pow(w, j) * yo[j];
-    }
-    return y;
+    FFT(fa, -1);
+
+    std::vector<int> res(n);
+    for (int i = 0; i < n; i++)
+        res[i] = round(fa[i].real() / n);
+    return res;
 }

@@ -32,12 +32,12 @@ int main() {
 //    std::cout << Interpolation::linearInterpolation(x, y, 0.5, true);
 
 //FFT
-    std::vector<int> a = {2,5,6};//2x^2+5x+6
-    std::vector<int> b = {3,3,8};//3x^2+3x+8
-    std::vector<int> c = FastFourierTransform::multiply(a, b);
-    for (int i = 0; i < c.size(); ++i) {
-        std::cout << c[i] << " ";
-    }
+//    std::vector<int> a = {2,5,6};//2x^2+5x+6
+//    std::vector<int> b = {3,3,8};//3x^2+3x+8
+//    std::vector<int> c = FastFourierTransform::multiply(a, b);
+//    for (int i = 0; i < c.size(); ++i) {
+//        std::cout << c[i] << " ";
+//    }
 
 //    std::unique_ptr<Polynomial> p1 = std::make_unique<Polynomial>();
 //    p1->addTerm(std::make_pair(boost::rational<int>(2,3), 4));

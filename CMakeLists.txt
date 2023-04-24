@@ -18,5 +18,5 @@ add_executable(
         FastFourierTransform.cpp
         FastFourierTransform.h
         Polynomial.cpp
-        Polynomial.h)
+        Polynomial.h MultivariatePolynomial.cpp MultivariatePolynomial.h)
 target_link_libraries(COD ${Boost_LIBRARIES})

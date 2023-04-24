@@ -98,6 +98,13 @@ build CMakeFiles/COD.dir/Polynomial.cpp.obj: CXX_COMPILER__COD_Debug C$:/Users/v
   OBJECT_DIR = CMakeFiles\COD.dir
   OBJECT_FILE_DIR = CMakeFiles\COD.dir
 
+build CMakeFiles/COD.dir/MultivariatePolynomial.cpp.obj: CXX_COMPILER__COD_Debug C$:/Users/vladc/Documents/Facultate/LUCRARE$ LICENTA/Algorithms-in-Computer-Algebra/MultivariatePolynomial.cpp || cmake_object_order_depends_target_COD
+  DEP_FILE = CMakeFiles\COD.dir\MultivariatePolynomial.cpp.obj.d
+  FLAGS = -static-libstdc++ -g
+  INCLUDES = -IC:/boost_1_80_0
+  OBJECT_DIR = CMakeFiles\COD.dir
+  OBJECT_FILE_DIR = CMakeFiles\COD.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target COD
@@ -106,7 +113,7 @@ build CMakeFiles/COD.dir/Polynomial.cpp.obj: CXX_COMPILER__COD_Debug C$:/Users/v
 #############################################
 # Link the executable COD.exe
 
-build COD.exe: CXX_EXECUTABLE_LINKER__COD_Debug CMakeFiles/COD.dir/main.cpp.obj CMakeFiles/COD.dir/EuclideanAlgorithm.cpp.obj CMakeFiles/COD.dir/ChineseRemainderAlgorithm.cpp.obj CMakeFiles/COD.dir/ExtendedEuclideanAlgorithm.cpp.obj CMakeFiles/COD.dir/Interpolation.cpp.obj CMakeFiles/COD.dir/FastFourierTransform.cpp.obj CMakeFiles/COD.dir/Polynomial.cpp.obj
+build COD.exe: CXX_EXECUTABLE_LINKER__COD_Debug CMakeFiles/COD.dir/main.cpp.obj CMakeFiles/COD.dir/EuclideanAlgorithm.cpp.obj CMakeFiles/COD.dir/ChineseRemainderAlgorithm.cpp.obj CMakeFiles/COD.dir/ExtendedEuclideanAlgorithm.cpp.obj CMakeFiles/COD.dir/Interpolation.cpp.obj CMakeFiles/COD.dir/FastFourierTransform.cpp.obj CMakeFiles/COD.dir/Polynomial.cpp.obj CMakeFiles/COD.dir/MultivariatePolynomial.cpp.obj
   FLAGS = -static-libstdc++ -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\COD.dir

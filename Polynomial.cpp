@@ -157,6 +157,37 @@ Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2, 
     return *p_temp;
 }
 
+
+std::pair<Polynomial, Polynomial> Polynomial::dividePoly(Polynomial& p1, const Polynomial& p2, bool flag)
+{
+    Polynomial quotient;
+    Polynomial tempPoly;
+    std::vector<Polynomial> reminders {};
+
+    int firstDeg = p1.terms_[0].second;
+    const int secondDeg = p2.terms_[0].second;
+
+    if(firstDeg >= secondDeg)
+    {
+        while(firstDeg >= secondDeg)
+        {
+            std::pair<boost::rational<int>, int> tempTerm;
+            tempTerm = std::make_pair(p1.terms_[0].first / p2.terms_[0].first, p2.terms_[0].second - p1.terms_[0].second);
+
+            tempPoly.addTerm(tempTerm);
+            p1 = Polynomial::subtractPoly(p1, Polynomial::multiplyPoly(tempPoly, p2));
+            quotient.addTerm(tempTerm);
+            reminders.push_back(p1);
+        }
+        return std::make_pair(quotient, reminders.at(reminders.size() - 1));
+    }
+    else
+    {
+        std::cerr << "Error: The first degree must be greater or equal to the second degree!";
+        return std::make_pair(p1, p2);
+    }
+}
+
 void Polynomial::printPoly() {
     if(!this->isProcessed) {
         this->processPoly();

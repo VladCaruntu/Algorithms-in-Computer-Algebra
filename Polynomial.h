@@ -16,6 +16,9 @@ public:
     static Polynomial addPoly(const Polynomial&, const Polynomial&, bool flag = false);
     static Polynomial subtractPoly(const Polynomial&, const Polynomial&, bool flag = false);
     static Polynomial multiplyPoly(const Polynomial&, const Polynomial&, bool flag = false);
+    //               quotient    reminder
+    static std::pair<Polynomial, Polynomial> dividePoly(Polynomial&, const Polynomial&, bool flag = false);
+//    static Polynomial GCD(const Polynomial&, const Polynomial&);
 
     bool isProcessed = false;
 };

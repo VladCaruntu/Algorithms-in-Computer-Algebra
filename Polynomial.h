@@ -9,6 +9,7 @@ private:
     std::vector<std::pair<boost::rational<int>, int>> terms_{};
     void sortPoly();
     void processPoly();
+    bool isPolyZero(const Polynomial&);
 public:
     void addTerm(const std::pair<boost::rational<int>, int>&);
     static std::vector<std::pair<boost::rational<int>, int>> getTerms(const Polynomial&);

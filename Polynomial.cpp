@@ -22,6 +22,10 @@ void Polynomial::sortPoly() {
     );
 }
 
+bool Polynomial::isPolyZero(const Polynomial& p){
+    return p.terms_.empty();
+}
+
 void Polynomial::processPoly() {
     this->sortPoly();
 
@@ -58,6 +62,10 @@ void Polynomial::processPoly() {
     this->terms_.clear();
     for(auto& el : p_temp->terms_){
         this->terms_.push_back(el);
+    }
+
+    if(isPolyZero(*this)){
+        this->terms_.push_back(std::make_pair(boost::rational<int>(0,1), 0));
     }
 }
 
@@ -223,7 +231,12 @@ void Polynomial::printPoly(Polynomial& p){
         std::cout << coef;
     }
     else if(power == 1) {
-        std::cout << coef << "x";
+        if(coef == 0) {
+            std::cout << 0;
+        }
+        else {
+            std::cout << coef << "x";
+        }
     }
     else {
         std::cout << coef << "x^" << power;

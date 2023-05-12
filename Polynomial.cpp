@@ -12,7 +12,7 @@ void Polynomial::addTerm(const std::pair<boost::rational<int>, int>& term) {
 }
 
 std::vector<std::pair<boost::rational<int>, int>> Polynomial::getTerms(const Polynomial& poly){
-    return this->terms_;
+    return poly.terms_;
 }
 
 void Polynomial::sortPoly() {
@@ -75,7 +75,7 @@ Polynomial Polynomial::addPoly(const Polynomial& p1, const Polynomial& p2, bool 
     }
 
     p_temp->processPoly();
-    p_temp->isProcessed = true;
+//    p_temp->isProcessed = true;
 
     auto endTime = std::chrono::high_resolution_clock::now();
     double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
@@ -105,7 +105,7 @@ Polynomial Polynomial::subtractPoly(const Polynomial& p1, const Polynomial& p2, 
     }
 
     p_temp->processPoly();
-    p_temp->isProcessed = true;
+//    p_temp->isProcessed = true;
 
     auto endTime = std::chrono::high_resolution_clock::now();
     double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
@@ -143,7 +143,7 @@ Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2, 
         }
     }
     p_temp->processPoly();
-    p_temp->isProcessed = true;
+//    p_temp->isProcessed = true;
 
     auto endTime = std::chrono::high_resolution_clock::now();
     double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
@@ -158,47 +158,71 @@ Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2, 
 }
 
 
-std::pair<Polynomial, Polynomial> Polynomial::dividePoly(Polynomial& p1, const Polynomial& p2, bool flag)
+std::pair<Polynomial, std::vector<Polynomial>> Polynomial::dividePoly(Polynomial p1, Polynomial& p2, bool flag)
 {
+    p1.processPoly();
+    p2.processPoly();
     Polynomial quotient;
     Polynomial tempPoly;
+    Polynomial p_temp;
     std::vector<Polynomial> reminders {};
 
     int firstDeg = p1.terms_[0].second;
     const int secondDeg = p2.terms_[0].second;
 
+    std::pair<boost::rational<int>, int> tempTerm;
     if(firstDeg >= secondDeg)
     {
-        while(firstDeg >= secondDeg)
+        int iter = 1;
+        while(firstDeg >= secondDeg)//conditie --- poate nu e asa...
         {
-            std::pair<boost::rational<int>, int> tempTerm;
-            tempTerm = std::make_pair(p1.terms_[0].first / p2.terms_[0].first, p2.terms_[0].second - p1.terms_[0].second);
+            std::cout<<"Iteratia " << iter++ <<":\n";
+            //aici formez termenul care se va inmulti cu impartitorul
+            tempTerm = std::make_pair(p1.terms_[0].first / p2.terms_[0].first, p1.terms_[0].second - p2.terms_[0].second);
+            tempPoly.addTerm(tempTerm);     //transform din std::pair in Polynomial ca sa il pot scadea din p1
+            std::cout<<"1\n";
+            //aici updatez p1 cu noua valoare, dupa ce scad din el p2 * tempPoly
+            p_temp = Polynomial::subtractPoly(p1, Polynomial::multiplyPoly(tempPoly, p2));
+            std::cout<<"2\n";
+            p1 = p_temp;
 
-            tempPoly.addTerm(tempTerm);
-            p1 = Polynomial::subtractPoly(p1, Polynomial::multiplyPoly(tempPoly, p2));
-            quotient.addTerm(tempTerm);
-            reminders.push_back(p1);
+            std::cout<<"Poly: ";
+            Polynomial::printPoly(p1);
+            std::cout<<"\n";
+
+            std::cout<<"3\n";
+            firstDeg = p1.terms_[0].second;     //aici iau din nou gradul
+            std::cout<<"4\n";
+            //curat tempPoly ca sa nu retina inmultirile precedente
+            tempPoly.terms_.clear();
+            std::cout<<"5\n";
+            quotient.addTerm(tempTerm);     //aici formez catul
+            reminders.push_back(p1);              //aici fac resturile
         }
-        return std::make_pair(quotient, reminders.at(reminders.size() - 1));
+        return std::make_pair(quotient, reminders);
     }
     else
     {
         std::cerr << "Error: The first degree must be greater or equal to the second degree!";
-        return std::make_pair(p1, p2);
+        return std::make_pair(p1, reminders);
     }
 }
 
-void Polynomial::printPoly() {
-    if(!this->isProcessed) {
-        this->processPoly();
-        this->isProcessed = true;
-    }
+void Polynomial::printPoly(Polynomial& p){
+    p.processPoly();
+//    if(!p.isProcessed) {
+//        p.processPoly();
+//        p.isProcessed = true;
+//    }
 
-    boost::rational<int> coef{this->terms_[0].first};
-    int power{this->terms_[0].second};
+    boost::rational<int> coef{p.terms_[0].first};
+    int power{p.terms_[0].second};
 
     // for the first term
-    if(power == 1) {
+    if(power == 0){
+        std::cout << coef;
+    }
+    else if(power == 1) {
         std::cout << coef << "x";
     }
     else {
@@ -206,9 +230,9 @@ void Polynomial::printPoly() {
     }
 
     //for the rest of the terms
-    for (size_t i{1}; i < this->terms_.size(); i++) {
-        coef = this->terms_[i].first;
-        power = this->terms_[i].second;
+    for (size_t i{1}; i < p.terms_.size(); i++) {
+        coef = p.terms_[i].first;
+        power = p.terms_[i].second;
 
         if (power == 1) {
             if (coef < 0) {
@@ -235,5 +259,5 @@ void Polynomial::printPoly() {
             }
         }
     }
-    std::cout << "=0\n";
+    std::cout << "\n";
 }

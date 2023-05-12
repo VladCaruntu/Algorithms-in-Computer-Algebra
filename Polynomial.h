@@ -11,16 +11,22 @@ private:
     void processPoly();
 public:
     void addTerm(const std::pair<boost::rational<int>, int>&);
-    std::vector<std::pair<boost::rational<int>, int>> getTerms(const Polynomial&);
-    void printPoly();
+    static std::vector<std::pair<boost::rational<int>, int>> getTerms(const Polynomial&);
+    static void printPoly(Polynomial&);
     static Polynomial addPoly(const Polynomial&, const Polynomial&, bool flag = false);
     static Polynomial subtractPoly(const Polynomial&, const Polynomial&, bool flag = false);
     static Polynomial multiplyPoly(const Polynomial&, const Polynomial&, bool flag = false);
-    //               quotient    reminder
-    static std::pair<Polynomial, Polynomial> dividePoly(Polynomial&, const Polynomial&, bool flag = false);
+    static std::pair<Polynomial, std::vector<Polynomial>> dividePoly(Polynomial, Polynomial&, bool flag = false);
 //    static Polynomial GCD(const Polynomial&, const Polynomial&);
+    Polynomial& operator=(const Polynomial& other) {
+        if (this == &other) {
+            return *this;
+        }
+        terms_ = other.terms_;
+        return *this;
+    }
 
-    bool isProcessed = false;
+//    bool isProcessed = false;
 };
 
 #endif

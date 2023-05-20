@@ -20,20 +20,14 @@ struct Term {
     }
 
     bool operator==(const Term& rhs) const {
-        if (term_.first != rhs.term_.first) {
-            return false;
-        }
-
         if (term_.second.size() != rhs.term_.second.size()) {
             return false;
         }
 
-        // Compare each element in the map
         for (const auto& entry : term_.second) {
             const auto& key = entry.first;
             const auto& value = entry.second;
 
-            // Check if the key exists in rhs.term_ and compare the values
             if (rhs.term_.second.count(key) == 0 || rhs.term_.second.at(key) != value) {
                 return false;
             }
@@ -44,26 +38,27 @@ struct Term {
     friend std::ostream& operator<<(std::ostream& os, const Term& term) {
         os << term.term_.first;
         for(const auto& monomial: term.term_.second){
-            if(monomial.second != 0) {
+            if(monomial.second > 1) {
                 os << "*" << monomial.first << "^" << monomial.second;
+            }
+            else if (monomial.second == 1){
+                os << "*" << monomial.first;
             }
         }
         return os;
     }
-
 };
 
 class MultivariatePolynomial {
 private:
     void processPoly();
-//    void sortPoly(int flag = 0);
+    void sortPoly(int flag = 0);
     bool isPolyZero(const MultivariatePolynomial&);
     int sumOfPowers(const Term&);
 //    std::vector<Term> terms_;
 
 public:
     std::vector<Term> terms_;
-    void sortPoly(int flag = 0);
     void addTerm(const Term& term);
     //verifici ce se intampla daca rezulatatul este 0
     static MultivariatePolynomial addPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
@@ -72,8 +67,8 @@ public:
     //verifici ce se intampla daca rezulatatul este 0
     static MultivariatePolynomial multiplyPolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&);
 
-    friend std::ostream& operator<<(std::ostream& os, const MultivariatePolynomial& poly) {
-
+    friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
+        poly.processPoly();
         os << poly.terms_[0] << " ";
 
         for(size_t i = 1; i < poly.terms_.size(); ++i){

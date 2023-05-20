@@ -60,8 +60,8 @@ void MultivariatePolynomial::processPoly(){
 
     size_t i = 0;
     while(i < this->terms_.size()){
-        //aici compar monoamele
-        if(this->terms_[i].term_ == this->terms_[i + 1].term_){
+        if(this->terms_[i] == this->terms_[i + 1]){
+//            std::cout << this->terms_[i] << "<--->" << this->terms_[i + 1] << "\n";
             tempCoeff += this->terms_[i].term_.first;
         }
         else {
@@ -92,6 +92,7 @@ void MultivariatePolynomial::processPoly(){
     }
 
     if(isPolyZero(*this)){
+        std::cout<<"poly e 0\n";
         tempVector.clear();
         for(size_t index = 0; index < nrOfVars; index++){
             tempVector.push_back(0);

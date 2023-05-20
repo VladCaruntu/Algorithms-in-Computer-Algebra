@@ -40,13 +40,14 @@ int main() {
 //        std::cout << c[i] << " ";
 //    }
 
-    std::unique_ptr<Polynomial> p1 = std::make_unique<Polynomial>();
-    p1->addTerm(std::make_pair(boost::rational<int>(32,1),1));
-    p1->addTerm(std::make_pair(boost::rational<int>(1,1),5));
-    p1->addTerm(std::make_pair(boost::rational<int>(-32,1),3));
-
-//    p1->addTerm(std::make_pair(boost::rational<int>(1,1),0));
-//    p1->addTerm(std::make_pair(boost::rational<int>(2,1), 2));
+//    std::unique_ptr<Polynomial> p1 = std::make_unique<Polynomial>();
+//    p1->addTerm(std::make_pair(boost::rational<int>(32,1),1));
+//    p1->addTerm(std::make_pair(boost::rational<int>(1,1),5));
+//    p1->addTerm(std::make_pair(boost::rational<int>(-32,1),3));
+//
+//    p1->addTerm(std::make_pair(boost::rational<int>(2,1),1));
+//    p1->addTerm(std::make_pair(boost::rational<int>(1,1), 0));
+//    p1->addTerm(std::make_pair(boost::rational<int>(1,1), 2));
 //    p1->addTerm(std::make_pair(boost::rational<int>(-7,1), 3));
 //    p1->addTerm(std::make_pair(boost::rational<int>(3,1), 5));
 //    p1->addTerm(std::make_pair(boost::rational<int>(11,1),1));
@@ -55,82 +56,73 @@ int main() {
 //    p1->addTerm(std::make_pair(boost::rational<int>(-3, 1),2));
 //    p1->addTerm(std::make_pair(boost::rational<int>(3, 1),1));
 //    p1->addTerm(std::make_pair(boost::rational<int>(-1, 1),0));
-    Polynomial::printPoly(*p1);
+//    Polynomial::printPoly(*p1);
 
-    std::unique_ptr<Polynomial> p2 = std::make_unique<Polynomial>();
-    p2->addTerm(std::make_pair(boost::rational<int>(-2,1),0));
-    p2->addTerm(std::make_pair(boost::rational<int>(1,1),1));
-//    p2.addTerm(std::make_pair(boost::rational<int>(1,1),0));
-//    p2.addTerm(std::make_pair(boost::rational<int>(6,1),4));
-//    p2.addTerm(std::make_pair(boost::rational<int>(7,1),3));
-//    p2.addTerm(std::make_pair(boost::rational<int>(1,1),1));
-//    p2.addTerm(std::make_pair(boost::rational<int>(-5,1),0));
-    Polynomial::printPoly(*p2);
-    auto result = Polynomial::dividePoly(*p1,*p2);
-    auto quotient = result.first;
-    auto reminders = result.second;
+//    std::unique_ptr<Polynomial> p2 = std::make_unique<Polynomial>();
+//    p2->addTerm(std::make_pair(boost::rational<int>(1,1),2));
+//    p2->addTerm(std::make_pair(boost::rational<int>(5,1),1));
+//    p2->addTerm(std::make_pair(boost::rational<int>(7,1),3));
+//    p2->addTerm(std::make_pair(boost::rational<int>(1,1),1));
+//    p2->addTerm(std::make_pair(boost::rational<int>(1,1),0));
 
-    std::cout<<"Quot: ";
-    Polynomial::printPoly(quotient);
-    for(const auto& term: Polynomial::getTerms(quotient))
-    {
-        std::cout<<term.first<<"x^"<<term.second<<"\n";
-    }
-    std::cout<<"\n";
+//    Polynomial::printPoly(*p1);
+//    Polynomial::printPoly(*p2);
+//    Polynomial ppp = Polynomial::subtractPoly(*p1, *p2);
+//    Polynomial::printPoly(ppp);
 
-    std::cout<<"Reminders: ";
-    for(auto& reminder: reminders){
-        Polynomial::printPoly(reminder);
-    }
+//    Polynomial::printPoly(*p2);
+//    auto result = Polynomial::dividePoly(*p1,*p2);
+//    auto quotient = result.first;
+//    auto reminders = result.second;
+//
+//    std::cout<<"Quot: ";
+//    Polynomial::printPoly(quotient);
+//    for(const auto& term: Polynomial::getTerms(quotient))
+//    {
+//        std::cout<<term.first<<"x^"<<term.second<<"\n";
+//    }
+//    std::cout<<"\n";
+//
+//    std::cout<<"Reminders: ";
+//    for(auto& reminder: reminders){
+//        Polynomial::printPoly(reminder);
+//    }
 
+    MultivariatePolynomial mvp1;
+    MultivariatePolynomial mvp2;
 
+    Term t1 = Term(boost::rational<int>(3,1), {2,3,1});
+    Term t2 = Term(boost::rational<int>(2,1), {4,3,0});
+    Term t3 = Term(boost::rational<int>(5,1), {1,0,1});
+    Term t4 = Term(boost::rational<int>(0,1), {2,5,4});
+    Term t5 = Term(boost::rational<int>(7,1), {5,0,1});
+    Term t6 = Term(boost::rational<int>(3,1), {2,2,2});
+    Term t7 = Term(boost::rational<int>(-5,1), {2,5,1});
+    Term t8 = Term(boost::rational<int>(-1,1), {8,3,2});
+    Term t9 = Term(boost::rational<int>(-1,1), {8,2,2});
 
+    mvp1.addTerm(t1);
+    mvp1.addTerm(t2);
+    mvp1.addTerm(t3);
+    mvp1.addTerm(t7);
+    mvp1.addTerm(t5);
 
-//    p2->addTerm(std::make_pair(boost::rational<int>(5,4), 1));
-//    p2->addTerm(std::make_pair(boost::rational<int>(2,3), 2));
+    mvp2.addTerm(t4);
+    mvp2.addTerm(t5);
+    mvp2.addTerm(t6);
+    mvp2.addTerm(t7);
 
-//    p1->printPoly();
-//    std::unique_ptr<Polynomial> p3 = std::make_unique<Polynomial>(Polynomial::addPoly(*p1, *p2, true));
-//    std::unique_ptr<Polynomial> p4 = std::make_unique<Polynomial>(Polynomial::subtractPoly(*p1, *p2, true));
-//    std::unique_ptr<Polynomial> p5 = std::make_unique<Polynomial>(Polynomial::multiplyPoly(*p1, *p2, true));
-//    p3->printPoly();
-//    p4->printPoly();
-//    p5->printPoly();
+//    std::cout<<t2;
 
-//    MultivariatePolynomial p1, p2, p3, p4;
-    //no powers equal to 0
+    std::cout<<mvp1<<"\n";
+    std::cout<<mvp2<<"\n";
 
-//    std::unordered_map<char, int> vars1 = {{'x', 2}};
-//    std::unordered_map<char, int> vars2 = {{'x', 1}};
-//    std::unordered_map<char, int> vars3 = {{'x', 0}};
-//    p4.addTerm(1.0, vars1);
-//    p4.addTerm(-2.0, vars2);
-//    p4.addTerm(1.0, vars3);
-//    std::cout<<p4<<"\n";
-//    std::unordered_map<char, int> vars1 = {{'x', 2}, {'y', 1}};
-//    std::unordered_map<char, int> vars2 = {{'x', 1}, {'y', 1}};
-//    std::unordered_map<char, int> vars3 = {{'x', 1}, {'y', 2}};
-//    p1.addTerm(2.0, vars1);
-//    p1.addTerm(-3.0, vars2);
-//    p1.addTerm(1.0, vars3);
-//    std::unordered_map<char, int> vars7 = {{'x', 1}, {'y', 2}};
-//    std::unordered_map<char, int> vars4 = {{'x', 2}, {'y', 1}, {'z', 5}};
-//    std::unordered_map<char, int> vars5 = {{'x', 1}, {'y', 2}, {'z', 3}};
-//    std::unordered_map<char, int> vars6 = {{'x', 1}, {'y', 2}, {'z', 2}};
-//    std::unordered_map<char, int> vars8 = {{'x', 1}, {'y', 0}, {'z', 1}};
-//    p2.addTerm(1.0, vars4);
-//    p2.addTerm(2.0, vars5);
-//    p2.addTerm(-1.0, vars6);
-//    p2.addTerm(-1.0, vars7);
-//    p2.addTerm(-7.0, vars8);
-//    std::cout<<p2<<"\n";
-//    MultivariatePolynomial factorized = p2.factorize();
-//    std::cout<<factorized<<"\n";
-//    p1.add(p2);
-//    std::cout<<p1<<"\n";
-//    p3 = MultivariatePolynomial::multiplyPolynomials(p1, p2);
-//    std::unordered_map<char, double> point = {{'x', 1.0}, {'y', 2.0}, {'z', 3}};
-//    double result1 = p3.evaluate(point);
+    std::cout<<"---------------------------------\n";
 
+    mvp1.sortPoly();
+    mvp2.sortPoly();
+
+    std::cout<<mvp1<<"\n";
+    std::cout<<mvp2<<"\n";
     return 0;
 }

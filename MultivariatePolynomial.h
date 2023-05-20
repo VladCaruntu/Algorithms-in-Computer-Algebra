@@ -3,67 +3,85 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-#include <unordered_map>
-#include <unordered_set>
+#include <map>
 #include <algorithm>
 #include <cmath>
+#include <boost/rational.hpp>
 
 struct Term {
-    double coefficient = 0.0;
-    std::unordered_map<char, int> variables {};
+    std::pair<boost::rational<int>, std::map<char,int>> term_;
 
-    Term(double c, std::unordered_map<char, int> v) : coefficient(c), variables(std::move(v)) {}
+    Term(const boost::rational<int>& coefficient, const std::vector<int>& powers){
+        term_.first = coefficient;
+        char c = 97; // a
+        for(int power: powers){
+            term_.second[c++] = power;
+        }
+    }
+
+    bool operator==(const Term& rhs) const {
+        if (term_.first != rhs.term_.first) {
+            return false;
+        }
+
+        if (term_.second.size() != rhs.term_.second.size()) {
+            return false;
+        }
+
+        // Compare each element in the map
+        for (const auto& entry : term_.second) {
+            const auto& key = entry.first;
+            const auto& value = entry.second;
+
+            // Check if the key exists in rhs.term_ and compare the values
+            if (rhs.term_.second.count(key) == 0 || rhs.term_.second.at(key) != value) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Term& term) {
+        os << term.term_.first;
+        for(const auto& monomial: term.term_.second){
+            if(monomial.second != 0) {
+                os << "*" << monomial.first << "^" << monomial.second;
+            }
+        }
+        return os;
+    }
+
 };
 
 class MultivariatePolynomial {
 private:
-    std::vector<Term> terms;
+    void processPoly();
+//    void sortPoly(int flag = 0);
+    bool isPolyZero(const MultivariatePolynomial&);
+    int sumOfPowers(const Term&);
+//    std::vector<Term> terms_;
 
 public:
-    void addTerm(double, const std::unordered_map<char, int>&);
-    double evaluate(std::unordered_map<char, double>);
-    void add(const MultivariatePolynomial&);
-    void subtract(const MultivariatePolynomial&);
-    MultivariatePolynomial factorize();
+    std::vector<Term> terms_;
+    void sortPoly(int flag = 0);
+    void addTerm(const Term& term);
+    //verifici ce se intampla daca rezulatatul este 0
     static MultivariatePolynomial addPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
+    //verifici ce se intampla daca rezulatatul este 0
     static MultivariatePolynomial subtractPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
+    //verifici ce se intampla daca rezulatatul este 0
     static MultivariatePolynomial multiplyPolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&);
 
     friend std::ostream& operator<<(std::ostream& os, const MultivariatePolynomial& poly) {
-        bool first_term = true;
-        for (auto it = poly.terms.begin(); it != poly.terms.end(); ++it) {
-            if (!first_term && it->coefficient > 0) {
-                os << " + ";
-            }
-            else if (!first_term && it->coefficient < 0){
-                os << " ";
+
+        os << poly.terms_[0] << " ";
+
+        for(size_t i = 1; i < poly.terms_.size(); ++i){
+            if (poly.terms_[i].term_.first > 0){
+                os << "+" << poly.terms_[i] << " ";
             }
             else{
-                first_term = false;
-            }
-            if(it->coefficient != 1) {
-                os << it->coefficient << "*";
-            }
-
-            bool first_var = true;
-            for (auto var_it = it->variables.begin(); var_it != it->variables.end(); ++var_it) {
-                //var_it->first  === variabila
-                //var_it->second === putere
-                if (!first_var) {
-                    os << "*";
-                } else {
-                    first_var = false;
-                }
-
-                if (var_it->second > 1) {//>0
-                    os << var_it->first << "^" << var_it->second;//puterea
-                }
-                else if (var_it->second == 1){
-                    os << var_it->first;
-                }
-                else {
-                    os << it->coefficient;
-                }
+                os << poly.terms_[i] << " ";
             }
         }
         return os;

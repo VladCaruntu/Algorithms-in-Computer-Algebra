@@ -31,14 +31,14 @@ void Polynomial::processPoly() {
 
     std::unique_ptr<Polynomial> p_temp = std::make_unique<Polynomial>();
     std::vector<std::pair<boost::rational<int>, int>> vect;
-    size_t i{ 0 };
     int maxDNE = 0;
     for(const auto& el : this->terms_)
         maxDNE = std::max(maxDNE, el.second);
 
-    boost::rational<int> tempCoeff{ 0 };
+    boost::rational<int> tempCoeff = 0;
     this->terms_.push_back(std::make_pair(1, maxDNE + 1));
 
+    size_t i = 0;
     while (i < this->terms_.size()) {
         if (this->terms_[i].second == this->terms_[i + 1].second) {
             tempCoeff += this->terms_[i].first;
@@ -54,7 +54,7 @@ void Polynomial::processPoly() {
 
     vect.pop_back();
 
-    for (const std::pair<boost::rational<int>, int> el : vect) {
+    for (const auto& el : vect) {
         if(el.first != 0)
             p_temp->terms_.push_back(el);
     }
@@ -188,22 +188,15 @@ std::pair<Polynomial, std::vector<Polynomial>> Polynomial::dividePoly(Polynomial
             //aici formez termenul care se va inmulti cu impartitorul
             tempTerm = std::make_pair(p1.terms_[0].first / p2.terms_[0].first, p1.terms_[0].second - p2.terms_[0].second);
             tempPoly.addTerm(tempTerm);     //transform din std::pair in Polynomial ca sa il pot scadea din p1
-            std::cout<<"1\n";
             //aici updatez p1 cu noua valoare, dupa ce scad din el p2 * tempPoly
             p_temp = Polynomial::subtractPoly(p1, Polynomial::multiplyPoly(tempPoly, p2));
-            std::cout<<"2\n";
             p1 = p_temp;
-
             std::cout<<"Poly: ";
             Polynomial::printPoly(p1);
             std::cout<<"\n";
-
-            std::cout<<"3\n";
             firstDeg = p1.terms_[0].second;     //aici iau din nou gradul
-            std::cout<<"4\n";
             //curat tempPoly ca sa nu retina inmultirile precedente
             tempPoly.terms_.clear();
-            std::cout<<"5\n";
             quotient.addTerm(tempTerm);     //aici formez catul
             reminders.push_back(p1);              //aici fac resturile
         }

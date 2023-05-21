@@ -19,8 +19,12 @@ struct Term {
         }
     }
 
-    bool operator==(const Term& rhs) const {
-        if (term_.second.size() != rhs.term_.second.size()) {
+    Term(){
+        term_.first = 0;//grija aici :)
+    }
+
+    bool operator==(const Term& other) const {
+        if (term_.second.size() != other.term_.second.size()) {
             return false;
         }
 
@@ -28,11 +32,36 @@ struct Term {
             const auto& key = entry.first;
             const auto& value = entry.second;
 
-            if (rhs.term_.second.count(key) == 0 || rhs.term_.second.at(key) != value) {
+            if (other.term_.second.count(key) == 0 || other.term_.second.at(key) != value) {
                 return false;
             }
         }
         return true;
+    }
+
+    friend Term operator*(const Term& t1, const Term& t2) {
+        boost::rational<int> coef = t1.term_.first * t2.term_.first;
+
+        std::vector<int> powers1{};
+        std::vector<int> powers2{};
+
+        //we put the powers of the variable in the first term in the vector powers1
+        for(const auto& var_pow: t1.term_.second){
+            powers1.push_back(var_pow.second);
+        }
+
+        //we put the powers of the variable in the second term in the vector powers2
+        for(const auto& var_pow: t2.term_.second){
+            powers2.push_back(var_pow.second);
+        }
+
+        std::vector<int> finalPowers{};
+        for(size_t i = 0; i < powers1.size(); i++){
+            finalPowers.push_back(powers1.at(i) + powers2.at(i));
+        }
+        Term result(coef, finalPowers);
+
+        return result;
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Term& term) {
@@ -51,21 +80,19 @@ struct Term {
 
 class MultivariatePolynomial {
 private:
+    std::vector<Term> terms_;
+
     void processPoly();
     void sortPoly(int flag = 0);
     bool isPolyZero(const MultivariatePolynomial&);
     int sumOfPowers(const Term&);
-//    std::vector<Term> terms_;
 
 public:
-    std::vector<Term> terms_;
     void addTerm(const Term& term);
-    //verifici ce se intampla daca rezulatatul este 0
     static MultivariatePolynomial addPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
-    //verifici ce se intampla daca rezulatatul este 0
     static MultivariatePolynomial subtractPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
-    //verifici ce se intampla daca rezulatatul este 0
     static MultivariatePolynomial multiplyPolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&);
+    static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&);
 
     friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
         poly.processPoly();
@@ -80,6 +107,14 @@ public:
             }
         }
         return os;
+    }
+
+    MultivariatePolynomial& operator= (const MultivariatePolynomial& other){
+        if (this == &other){
+            return *this;
+        }
+        this->terms_ = other.terms_;
+        return *this;
     }
 };
 

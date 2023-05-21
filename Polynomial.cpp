@@ -182,7 +182,7 @@ std::pair<Polynomial, std::vector<Polynomial>> Polynomial::dividePoly(Polynomial
     if(firstDeg >= secondDeg)
     {
         int iter = 1;
-        while(firstDeg >= secondDeg)//conditie --- poate nu e asa...
+        while(firstDeg >= secondDeg)
         {
             std::cout<<"Iteratia " << iter++ <<":\n";
             //aici formez termenul care se va inmulti cu impartitorul

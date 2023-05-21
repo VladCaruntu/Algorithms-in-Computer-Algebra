@@ -104,32 +104,32 @@ int main() {
     Term t11 = Term(boost::rational<int>(11,1), {5,0});
     Term t12 = Term(boost::rational<int>(10,1), {4,3});
 
+    std::cout<<t6*t7;
+
     mvp1.addTerm(t1);
     mvp1.addTerm(t2);
-    mvp1.addTerm(t3);
-    mvp1.addTerm(t4);
-    mvp1.addTerm(t5);
     mvp1.addTerm(t6);
-    mvp1.addTerm(t7);
     mvp1.addTerm(t8);
-    mvp1.addTerm(t9);
-    mvp1.addTerm(t10);
-    mvp1.addTerm(t11);
-    mvp1.addTerm(t12);
-
-    std::cout<<mvp1<<"\n";
-
-//    mvp2.addTerm(t4);
-//    mvp2.addTerm(t5);
-//    mvp2.addTerm(t6);
-//    mvp2.addTerm(t7);
-
-//    std::cout<<t2;
 
 //    std::cout<<mvp1<<"\n";
+
+    mvp2.addTerm(t1);
+    mvp2.addTerm(t5);
+    mvp2.addTerm(t6);
+    mvp2.addTerm(t7);
+
 //    std::cout<<mvp2<<"\n";
 //
-//    std::cout<<"---------------------------------\n";
+//    std::cout<<"------------------------------------------------\n";
+//    MultivariatePolynomial mvp3;
+//    mvp3 = MultivariatePolynomial::addPolynomials(mvp1, mvp2);
+//    std::cout<<mvp3<<"\n";
+//
+//    mvp3 = MultivariatePolynomial::subtractPolynomials(mvp1, mvp2);
+//    std::cout<<mvp3<<"\n";
+//    std::cout<<"------------------------------------------------\n";
+//    std::cout<<mvp1<<"\n";
+//    std::cout<<mvp2<<"\n";
 //
 //    mvp1.sortPoly();
 //    mvp2.sortPoly();

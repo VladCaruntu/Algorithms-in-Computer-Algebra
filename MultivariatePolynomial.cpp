@@ -61,12 +61,10 @@ void MultivariatePolynomial::processPoly(){
     size_t i = 0;
     while(i < this->terms_.size()){
         if(this->terms_[i] == this->terms_[i + 1]){
-//            std::cout << this->terms_[i] << "<--->" << this->terms_[i + 1] << "\n";
             tempCoeff += this->terms_[i].term_.first;
         }
         else {
             tempCoeff += this->terms_[i].term_.first;
-            //el aici are toata mapa...mie imi trebuie doar puterile variabilelor...
             std::vector<int> tempPowers{};
             for(const auto& varPow: this->terms_[i].term_.second){
                 tempPowers.push_back(varPow.second);
@@ -92,7 +90,6 @@ void MultivariatePolynomial::processPoly(){
     }
 
     if(isPolyZero(*this)){
-        std::cout<<"poly e 0\n";
         tempVector.clear();
         for(size_t index = 0; index < nrOfVars; index++){
             tempVector.push_back(0);
@@ -100,4 +97,52 @@ void MultivariatePolynomial::processPoly(){
         this->terms_.push_back(Term(boost::rational<int>(0,1), tempVector));
     }
 }
+
+MultivariatePolynomial MultivariatePolynomial::addPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2){
+    std::unique_ptr<MultivariatePolynomial> p_temp = std::make_unique<MultivariatePolynomial>();
+    for(const auto& el: p1.terms_){
+        p_temp->terms_.push_back(el);
+    }
+
+    for(const auto& el: p2.terms_){
+        p_temp->terms_.push_back(el);
+    }
+
+    p_temp->processPoly();
+    return *p_temp;
+}
+
+MultivariatePolynomial MultivariatePolynomial::subtractPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2){
+    std::unique_ptr<MultivariatePolynomial> p_temp = std::make_unique<MultivariatePolynomial>();
+    std::unique_ptr<MultivariatePolynomial> p2_copy = std::make_unique<MultivariatePolynomial>(p2);
+    for(const auto& el: p1.terms_){
+        p_temp->terms_.push_back(el);
+    }
+
+    for(auto& el: p2_copy->terms_){
+        el.term_.first *= -1;
+        p_temp->terms_.push_back(el);
+    }
+
+    p_temp->processPoly();
+    return *p_temp;
+}
+
+MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2){
+    std::unique_ptr<MultivariatePolynomial> p_temp = std::make_unique<MultivariatePolynomial>();
+
+    int power1, power2;
+    boost::rational<int> coef1, coef2, tempCoef;
+    int tempPower;
+    Term tempTerm;
+
+    for(size_t i = 0; i < p1.terms_.size(); i++){
+
+    }
+}
+
+
+
+
+
 

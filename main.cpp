@@ -91,6 +91,7 @@ int main() {
     MultivariatePolynomial mvp1;
     MultivariatePolynomial mvp2;
 
+    Term t0 = Term(boost::rational<int>(-2,1), {0});
     Term t1 = Term(boost::rational<int>(3,1), {2,3});
     Term t2 = Term(boost::rational<int>(2,1), {1,5});
     Term t3 = Term(boost::rational<int>(5,1), {2,3,4});
@@ -103,8 +104,9 @@ int main() {
     Term t10 = Term(boost::rational<int>(-4,1), {4,3});
     Term t11 = Term(boost::rational<int>(11,1), {5,0});
     Term t12 = Term(boost::rational<int>(10,1), {4,3});
+    Term t13 = Term(boost::rational<int>(-5,1), {4,3,6,9,3,21,5,3,556,7});
 
-    std::cout<<t6*t7;
+    std::cout<<t13*t0;
 
     mvp1.addTerm(t1);
     mvp1.addTerm(t2);

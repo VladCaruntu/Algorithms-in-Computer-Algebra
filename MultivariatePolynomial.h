@@ -55,8 +55,27 @@ struct Term {
             powers2.push_back(var_pow.second);
         }
 
+        size_t size = std::max(powers1.size(), powers2.size());
+        size_t size1 = powers1.size();
+        size_t size2 = powers2.size();
+
+        if(powers1.size() > powers2.size()){
+            size = powers1.size();
+            while(size2 < size1){
+                powers2.push_back(0);
+                size2++;
+            }
+        }
+        else{
+            size = powers2.size();
+            while(size1 < size2){
+                powers1.push_back(0);
+                size1++;
+            }
+        }
+
         std::vector<int> finalPowers{};
-        for(size_t i = 0; i < powers1.size(); i++){
+        for(size_t i = 0; i < size; i++){
             finalPowers.push_back(powers1.at(i) + powers2.at(i));
         }
         Term result(coef, finalPowers);
@@ -65,6 +84,10 @@ struct Term {
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Term& term) {
+        if(term.term_.first == 0){
+            os << "0";
+            return os;
+        }
         os << term.term_.first;
         for(const auto& monomial: term.term_.second){
             if(monomial.second > 1) {

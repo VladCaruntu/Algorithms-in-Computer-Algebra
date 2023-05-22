@@ -131,14 +131,9 @@ MultivariatePolynomial MultivariatePolynomial::subtractPolynomials(const Multiva
 MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2){
     std::unique_ptr<MultivariatePolynomial> p_temp = std::make_unique<MultivariatePolynomial>();
 
-    int power1, power2;
-    boost::rational<int> coef1, coef2, tempCoef;
-    int tempPower;
-    Term tempTerm;
 
-    for(size_t i = 0; i < p1.terms_.size(); i++){
 
-    }
+    return *p_temp;
 }
 
 

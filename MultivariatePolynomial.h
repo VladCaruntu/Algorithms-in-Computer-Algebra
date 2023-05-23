@@ -20,7 +20,7 @@ struct Term {
     }
 
     Term(){
-        term_.first = 0;//grija aici :)
+        term_.first = 0;
     }
 
     bool operator==(const Term& other) const {
@@ -55,7 +55,7 @@ struct Term {
             powers2.push_back(var_pow.second);
         }
 
-        size_t size = std::max(powers1.size(), powers2.size());
+        size_t size;
         size_t size1 = powers1.size();
         size_t size2 = powers2.size();
 
@@ -109,6 +109,7 @@ private:
     void sortPoly(int flag = 0);
     bool isPolyZero(const MultivariatePolynomial&);
     int sumOfPowers(const Term&);
+    int getDegree(const MultivariatePolynomial&);
 
 public:
     void addTerm(const Term& term);

@@ -131,13 +131,40 @@ MultivariatePolynomial MultivariatePolynomial::subtractPolynomials(const Multiva
 MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2){
     std::unique_ptr<MultivariatePolynomial> p_temp = std::make_unique<MultivariatePolynomial>();
 
+    for(const auto& term1: p1.terms_){
+        for(const auto& term2: p2.terms_) {
+            p_temp->terms_.push_back(term1 * term2);
+        }
+    }
 
+    p_temp->processPoly();
 
     return *p_temp;
 }
 
+int MultivariatePolynomial::getDegree(const MultivariatePolynomial& p){
+    std::unique_ptr<MultivariatePolynomial> p_copy=  std::make_unique<MultivariatePolynomial>(p);
+    int sum = 0;
+
+    p_copy->processPoly();
+    for(const auto& var_pow: p_copy->terms_[0].term_.second){
+        sum += var_pow.second;
+    }
+
+    return sum;
+}
+
+std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> MultivariatePolynomial::dividePolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2) {
+    std::unique_ptr<MultivariatePolynomial> p1_copy = std::make_unique<MultivariatePolynomial>(p1);
+    std::unique_ptr<MultivariatePolynomial> p2_copy = std::make_unique<MultivariatePolynomial>(p2);
+    p1_copy->processPoly();
+    p2_copy->processPoly();
+
+    MultivariatePolynomial quotient;
+    MultivariatePolynomial tempPoly;
+    MultivariatePolynomial p_temp;
+
+    std::vector<MultivariatePolynomial> reminders{};
 
 
-
-
-
+}

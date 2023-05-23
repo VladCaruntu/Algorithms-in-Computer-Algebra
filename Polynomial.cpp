@@ -165,7 +165,7 @@ Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2, 
     return *p_temp;
 }
 
-
+//modifica parametri in const si faci copie cu smart pointer la ambele polinoame
 std::pair<Polynomial, std::vector<Polynomial>> Polynomial::dividePoly(Polynomial p1, Polynomial& p2, bool flag)
 {
     p1.processPoly();

@@ -26,8 +26,6 @@ public:
         terms_ = other.terms_;
         return *this;
     }
-
-//    bool isProcessed = false;
 };
 
 #endif

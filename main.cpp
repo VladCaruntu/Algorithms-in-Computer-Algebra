@@ -106,21 +106,18 @@ int main() {
     Term t12 = Term(boost::rational<int>(10,1), {4,3});
     Term t13 = Term(boost::rational<int>(-5,1), {4,3,6,9,3,21,5,3,556,7});
 
-    std::cout<<t13*t0;
 
     mvp1.addTerm(t1);
     mvp1.addTerm(t2);
-    mvp1.addTerm(t6);
-    mvp1.addTerm(t8);
+    std::cout<<mvp1<<"\n";
 
-//    std::cout<<mvp1<<"\n";
-
-    mvp2.addTerm(t1);
     mvp2.addTerm(t5);
     mvp2.addTerm(t6);
-    mvp2.addTerm(t7);
+    std::cout<<mvp2<<"\n";
 
-//    std::cout<<mvp2<<"\n";
+
+    MultivariatePolynomial product = MultivariatePolynomial::multiplyPolynomials(mvp1, mvp2);
+    std::cout << product<<"\n";
 //
 //    std::cout<<"------------------------------------------------\n";
 //    MultivariatePolynomial mvp3;
@@ -132,11 +129,6 @@ int main() {
 //    std::cout<<"------------------------------------------------\n";
 //    std::cout<<mvp1<<"\n";
 //    std::cout<<mvp2<<"\n";
-//
-//    mvp1.sortPoly();
-//    mvp2.sortPoly();
-//
-//    std::cout<<mvp1<<"\n";
-//    std::cout<<mvp2<<"\n";
+
     return 0;
 }

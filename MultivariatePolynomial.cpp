@@ -142,8 +142,8 @@ MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const Multiva
     return *p_temp;
 }
 
-int MultivariatePolynomial::getDegree(const MultivariatePolynomial& p){
-    std::unique_ptr<MultivariatePolynomial> p_copy=  std::make_unique<MultivariatePolynomial>(p);
+int MultivariatePolynomial::getDegree() const{
+    std::unique_ptr<MultivariatePolynomial> p_copy = std::make_unique<MultivariatePolynomial>(*this);
     int sum = 0;
 
     p_copy->processPoly();
@@ -163,8 +163,20 @@ std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> Multivari
     MultivariatePolynomial quotient;
     MultivariatePolynomial tempPoly;
     MultivariatePolynomial p_temp;
-
     std::vector<MultivariatePolynomial> reminders{};
 
+    int firstDeg = p1.getDegree();
+    const int secondDeg = p2.getDegree();
 
+    Term tempTerm;
+    if(firstDeg >= secondDeg)
+    {
+        int iter = 1;
+        while(firstDeg >= secondDeg)
+        {
+            std::cout<<"Iteratia " << iter++ << ":\n";
+
+            Term(p1.terms_[0].term_.first / p2.terms_[0].term_.first, {});
+        }
+    }
 }

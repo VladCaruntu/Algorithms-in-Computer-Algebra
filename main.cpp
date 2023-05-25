@@ -103,32 +103,9 @@ int main() {
     Term t9 = Term(boost::rational<int>(-1,1), {2,2,2});
     Term t10 = Term(boost::rational<int>(-4,1), {4,3});
     Term t11 = Term(boost::rational<int>(11,1), {5,0});
-    Term t12 = Term(boost::rational<int>(10,1), {4,3});
+    Term t12 = Term(boost::rational<int>(10,1), {4,3,5,2});
     Term t13 = Term(boost::rational<int>(-5,1), {4,3,6,9,3,21,5,3,556,7});
 
-
-    mvp1.addTerm(t1);
-    mvp1.addTerm(t2);
-    std::cout<<mvp1<<"\n";
-
-    mvp2.addTerm(t5);
-    mvp2.addTerm(t6);
-    std::cout<<mvp2<<"\n";
-
-
-    MultivariatePolynomial product = MultivariatePolynomial::multiplyPolynomials(mvp1, mvp2);
-    std::cout << product<<"\n";
-//
-//    std::cout<<"------------------------------------------------\n";
-//    MultivariatePolynomial mvp3;
-//    mvp3 = MultivariatePolynomial::addPolynomials(mvp1, mvp2);
-//    std::cout<<mvp3<<"\n";
-//
-//    mvp3 = MultivariatePolynomial::subtractPolynomials(mvp1, mvp2);
-//    std::cout<<mvp3<<"\n";
-//    std::cout<<"------------------------------------------------\n";
-//    std::cout<<mvp1<<"\n";
-//    std::cout<<mvp2<<"\n";
-
+    std::cout<<t11/t12;
     return 0;
 }

@@ -11,6 +11,42 @@
 struct Term {
     std::pair<boost::rational<int>, std::map<char,int>> term_;
 
+    static std::pair<Term, Term> equalizeTerms(const Term& t1, const Term& t2)
+    {
+        std::unique_ptr<Term> t1_copy = std::make_unique<Term>(t1);
+        std::unique_ptr<Term> t2_copy = std::make_unique<Term>(t2);
+
+        std::vector<int> powers1{};
+        std::vector<int> powers2{};
+
+        for(const auto& var_pow: t1.term_.second){
+            powers1.push_back(var_pow.second);
+        }
+
+        for(const auto& var_pow: t2.term_.second){
+            powers2.push_back(var_pow.second);
+        }
+        size_t size1 = t1.term_.second.size();
+        size_t size2 = t2.term_.second.size();
+
+        if(size1 > size2){
+            while(size2 < size1){
+                powers2.push_back(0);
+                size2++;
+            }
+        }
+        else{
+            while(size1 < size2){
+                powers1.push_back(0);
+                size1++;
+            }
+        }
+
+        *t1_copy = Term(t1.term_.first, powers1);
+        *t2_copy = Term(t2.term_.first, powers2);
+        return std::pair{*t1_copy, *t2_copy};
+    }
+
     Term(const boost::rational<int>& coefficient, const std::vector<int>& powers){
         term_.first = coefficient;
         char c = 97; // a
@@ -40,48 +76,70 @@ struct Term {
     }
 
     friend Term operator*(const Term& t1, const Term& t2) {
+        auto termPair = equalizeTerms(t1, t2);
+        Term term1 = termPair.first;
+        Term term2 = termPair.second;
+
         boost::rational<int> coef = t1.term_.first * t2.term_.first;
+        size_t size = term1.term_.second.size();
+        std::vector<int> finalPowers{};
 
         std::vector<int> powers1{};
         std::vector<int> powers2{};
 
-        //we put the powers of the variable in the first term in the vector powers1
-        for(const auto& var_pow: t1.term_.second){
+        for(const auto& var_pow: term1.term_.second){
             powers1.push_back(var_pow.second);
         }
-
-        //we put the powers of the variable in the second term in the vector powers2
-        for(const auto& var_pow: t2.term_.second){
+        for(const auto& var_pow: term2.term_.second){
             powers2.push_back(var_pow.second);
         }
 
-        size_t size;
-        size_t size1 = powers1.size();
-        size_t size2 = powers2.size();
-
-        if(powers1.size() > powers2.size()){
-            size = powers1.size();
-            while(size2 < size1){
-                powers2.push_back(0);
-                size2++;
-            }
-        }
-        else{
-            size = powers2.size();
-            while(size1 < size2){
-                powers1.push_back(0);
-                size1++;
-            }
-        }
-
-        std::vector<int> finalPowers{};
         for(size_t i = 0; i < size; i++){
             finalPowers.push_back(powers1.at(i) + powers2.at(i));
         }
-        Term result(coef, finalPowers);
 
+        Term result(coef, finalPowers);
         return result;
     }
+
+    friend Term operator/(const Term& t1, const Term& t2)
+    {
+        auto termPair = equalizeTerms(t1, t2);
+        Term term1 = termPair.first;
+        Term term2 = termPair.second;
+
+        boost::rational<int> coef = t1.term_.first / t2.term_.first;
+        size_t size = term1.term_.second.size();
+        std::vector<int> finalPowers{};
+
+        std::vector<int> powers1{};
+        std::vector<int> powers2{};
+
+        for(const auto& var_pow: term1.term_.second){
+            powers1.push_back(var_pow.second);
+
+        }
+
+        for(const auto& var_pow: term2.term_.second){
+            powers2.push_back(var_pow.second);
+        }
+
+        for(size_t i = 0; i < size; i++){
+            if(powers1[i] < powers2[i]){
+                finalPowers.push_back(0);
+            }
+            else if(powers2[i] == 0 && powers1[i] > 0){
+                finalPowers.push_back(powers1[i]);
+            }
+            else {
+                finalPowers.push_back(powers1[i] - powers2[i]);
+            }
+        }
+
+        Term result(coef, finalPowers);
+        return result;
+    }
+
 
     friend std::ostream& operator<<(std::ostream& os, const Term& term) {
         if(term.term_.first == 0){
@@ -109,7 +167,7 @@ private:
     void sortPoly(int flag = 0);
     bool isPolyZero(const MultivariatePolynomial&);
     int sumOfPowers(const Term&);
-    int getDegree(const MultivariatePolynomial&);
+    int getDegree() const;
 
 public:
     void addTerm(const Term& term);

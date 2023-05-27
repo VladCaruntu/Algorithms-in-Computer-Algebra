@@ -162,7 +162,7 @@ struct Term {
             }
             else
             {
-                if(monomial.second > 0)
+                if(monomial.second != 0)
                 {
                     os << monomial.first;
                     return os;

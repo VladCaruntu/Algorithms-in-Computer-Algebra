@@ -56,7 +56,7 @@ void MultivariatePolynomial::processPoly(){
     boost::rational<int> tempCoeff = 0;
     int nrOfVars = this->terms_[0].term_.second.size();
     std::vector<int> tempVector (nrOfVars, maxDNE);
-    this->terms_.push_back(Term(boost::rational<int>(0,1), tempVector));
+    this->terms_.push_back(Term(boost::rational<int>(1,1), tempVector));
 
     size_t i = 0;
     while(i < this->terms_.size()){
@@ -76,7 +76,7 @@ void MultivariatePolynomial::processPoly(){
         ++i;
     }
 
-    if(vect.size() > 1)
+//    if(vect.size() > 1)
         vect.pop_back();
 
     for(const auto& el: vect){
@@ -90,6 +90,11 @@ void MultivariatePolynomial::processPoly(){
         this->terms_.push_back(el);
     }
 
+//    std::cout<<"Din functie\n";
+//    for(const auto& term: this->terms_) {
+//        std::cout << term << "@@@";
+//    }
+//    std::cout<<"\n";
     if(isPolyZero(*this)){
         tempVector.clear();
         for(size_t index = 0; index < nrOfVars; index++){
@@ -104,11 +109,9 @@ MultivariatePolynomial MultivariatePolynomial::addPolynomials(const Multivariate
     for(const auto& el: p1.terms_){
         p_temp->terms_.push_back(el);
     }
-
     for(const auto& el: p2.terms_){
         p_temp->terms_.push_back(el);
     }
-
     p_temp->processPoly();
     return *p_temp;
 }

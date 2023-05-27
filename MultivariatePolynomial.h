@@ -11,6 +11,24 @@
 struct Term {
     std::pair<boost::rational<int>, std::map<char,int>> term_;
 
+    Term(const boost::rational<int>& coefficient, const std::vector<int>& powers){
+        term_.first = coefficient;
+        char c = 97; // a
+        if(!powers.empty()) {
+            for (int power: powers) {
+                term_.second[c++] = power;
+            }
+        }
+        else
+        {
+            std::cerr<<"Invalid power vector";
+        }
+    }
+
+    Term(){
+        term_.first = 0;
+    }
+
     static std::pair<Term, Term> equalizeTerms(const Term& t1, const Term& t2)
     {
         std::unique_ptr<Term> t1_copy = std::make_unique<Term>(t1);
@@ -45,18 +63,6 @@ struct Term {
         *t1_copy = Term(t1.term_.first, powers1);
         *t2_copy = Term(t2.term_.first, powers2);
         return std::pair{*t1_copy, *t2_copy};
-    }
-
-    Term(const boost::rational<int>& coefficient, const std::vector<int>& powers){
-        term_.first = coefficient;
-        char c = 97; // a
-        for(int power: powers){
-            term_.second[c++] = power;
-        }
-    }
-
-    Term(){
-        term_.first = 0;
     }
 
     bool operator==(const Term& other) const {
@@ -154,6 +160,14 @@ struct Term {
             else if (monomial.second == 1){
                 os << "*" << monomial.first;
             }
+            else
+            {
+                if(monomial.second > 0)
+                {
+                    os << monomial.first;
+                    return os;
+                }
+            }
         }
         return os;
     }
@@ -166,6 +180,8 @@ private:
     void processPoly();
     void sortPoly(int flag = 0);
     bool isPolyZero(const MultivariatePolynomial&);
+    //sa stergi static de la canDivide
+    static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
     int sumOfPowers(const Term&);
     int getDegree() const;
 
@@ -177,14 +193,18 @@ public:
     static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&);
 
     friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
-        poly.processPoly();
+        if(poly.terms_.size() > 1)
+            poly.processPoly();
+//        std::cout<<"afisam polinom..."<<poly.terms_.size();
         os << poly.terms_[0] << " ";
-
+//        std::cout<<"1\n";
         for(size_t i = 1; i < poly.terms_.size(); ++i){
             if (poly.terms_[i].term_.first > 0){
+//                std::cout<<"2\n";
                 os << "+" << poly.terms_[i] << " ";
             }
             else{
+//                std::cout<<"3\n";
                 os << poly.terms_[i] << " ";
             }
         }

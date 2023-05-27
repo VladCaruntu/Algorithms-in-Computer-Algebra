@@ -91,21 +91,48 @@ int main() {
     MultivariatePolynomial mvp1;
     MultivariatePolynomial mvp2;
 
-    Term t0 = Term(boost::rational<int>(-2,1), {0});
-    Term t1 = Term(boost::rational<int>(3,1), {2,3});
-    Term t2 = Term(boost::rational<int>(2,1), {1,5});
-    Term t3 = Term(boost::rational<int>(5,1), {2,3,4});
-    Term t4 = Term(boost::rational<int>(0,1), {9,6});
-    Term t5 = Term(boost::rational<int>(-11,1), {5,0});
-    Term t6 = Term(boost::rational<int>(3,1), {2,2,2});
-    Term t7 = Term(boost::rational<int>(-5,1), {2,5,1});
-    Term t8 = Term(boost::rational<int>(-1,1), {8,3,2});
-    Term t9 = Term(boost::rational<int>(-1,1), {2,2,2});
-    Term t10 = Term(boost::rational<int>(-4,1), {4,3});
-    Term t11 = Term(boost::rational<int>(11,1), {5,0});
-    Term t12 = Term(boost::rational<int>(10,1), {4,3,5,2});
-    Term t13 = Term(boost::rational<int>(-5,1), {4,3,6,9,3,21,5,3,556,7});
+//    Term t0 = Term(boost::rational<int>(-2,1), {0});
+//    Term t1 = Term(boost::rational<int>(3,1), {2,3});
+//    Term t2 = Term(boost::rational<int>(2,1), {1,5});
+//    Term t3 = Term(boost::rational<int>(5,1), {2,3,4});
+//    Term t4 = Term(boost::rational<int>(0,1), {9,6});
+//    Term t5 = Term(boost::rational<int>(-11,1), {5,0});
+//    Term t6 = Term(boost::rational<int>(3,1), {2,2,2});
+//    Term t7 = Term(boost::rational<int>(-5,1), {2,5,1});
+//    Term t8 = Term(boost::rational<int>(-1,1), {8,3,2});
+//    Term t9 = Term(boost::rational<int>(-1,1), {2,2,2});
+//    Term t10 = Term(boost::rational<int>(-4,1), {4,3});
+//    Term t11 = Term(boost::rational<int>(11,1), {5,0});
+//    Term t12 = Term(boost::rational<int>(10,1), {4,3,5,2});
+//    Term t13 = Term(boost::rational<int>(-5,1), {4,3,6,9,3,21,5,3,556,7});
 
-    std::cout<<t11/t12;
+//    Term t1 = Term(boost::rational<int>(1,1), {3,2});
+//    Term t2 = Term(boost::rational<int>(1,1), {1,2});
+    Term t3 = Term(boost::rational<int>(-30,1), {0});
+    Term t8 = Term(boost::rational<int>(2,1), {0,9});
+    Term t7 = Term(boost::rational<int>(11,1), {0});
+
+//    mvp1.addTerm(t1);
+//    mvp1.addTerm(t2);
+//    mvp1.addTerm(t3);
+
+//    Term t4 = Term(boost::rational<int>(1,1), {2,1});
+//    Term t5 = Term(boost::rational<int>(1,1), {0});
+//    Term t6 = Term(boost::rational<int>(0,1), {});
+
+//    mvp2.addTerm(t4);
+//    mvp2.addTerm(t5);
+//    mvp2.addTerm(t6);
+    mvp2.addTerm(t3);
+    mvp2.addTerm(t7);
+    mvp2.addTerm(t8);
+
+//    std::cout<<mvp1<<"\n";
+//    std::cout<<t3<<"\n"<<t7<<"\n"<<t8<<"\n";
+    std::cout<<mvp2;
+
+//    auto result = MultivariatePolynomial::dividePolynomials(mvp1, mvp2);
+//    std::cout<< result.first;
+
     return 0;
 }

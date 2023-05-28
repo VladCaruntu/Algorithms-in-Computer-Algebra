@@ -25,12 +25,13 @@ struct Term {
         }
     }
 
-    Term(){
-        term_.first = 0;
-    }
+    Term() = delete;
 
-    static std::pair<Term, Term> equalizeTerms(const Term& t1, const Term& t2)
+    static void equalizeTerms(Term& t1, Term& t2)
     {
+        if(t1.term_.second.size() == t2.term_.second.size())//if already equal -> function call overkill
+            return;
+
         std::unique_ptr<Term> t1_copy = std::make_unique<Term>(t1);
         std::unique_ptr<Term> t2_copy = std::make_unique<Term>(t2);
 
@@ -60,9 +61,8 @@ struct Term {
             }
         }
 
-        *t1_copy = Term(t1.term_.first, powers1);
-        *t2_copy = Term(t2.term_.first, powers2);
-        return std::pair{*t1_copy, *t2_copy};
+        t1 = Term(t1.term_.first, powers1);
+        t2 = Term(t2.term_.first, powers2);
     }
 
     bool operator==(const Term& other) const {
@@ -82,21 +82,21 @@ struct Term {
     }
 
     friend Term operator*(const Term& t1, const Term& t2) {
-        auto termPair = equalizeTerms(t1, t2);
-        Term term1 = termPair.first;
-        Term term2 = termPair.second;
+        std::unique_ptr<Term> term1 = std::make_unique<Term> (t1);
+        std::unique_ptr<Term> term2 = std::make_unique<Term> (t2);
+        equalizeTerms(*term1, *term2);
 
         boost::rational<int> coef = t1.term_.first * t2.term_.first;
-        size_t size = term1.term_.second.size();
+        size_t size = term1->term_.second.size();
         std::vector<int> finalPowers{};
 
         std::vector<int> powers1{};
         std::vector<int> powers2{};
 
-        for(const auto& var_pow: term1.term_.second){
+        for(const auto& var_pow: term1->term_.second){
             powers1.push_back(var_pow.second);
         }
-        for(const auto& var_pow: term2.term_.second){
+        for(const auto& var_pow: term2->term_.second){
             powers2.push_back(var_pow.second);
         }
 
@@ -110,23 +110,23 @@ struct Term {
 
     friend Term operator/(const Term& t1, const Term& t2)
     {
-        auto termPair = equalizeTerms(t1, t2);
-        Term term1 = termPair.first;
-        Term term2 = termPair.second;
+        std::unique_ptr<Term> term1 = std::make_unique<Term> (t1);
+        std::unique_ptr<Term> term2 = std::make_unique<Term> (t2);
+        equalizeTerms(*term1, *term2);
 
         boost::rational<int> coef = t1.term_.first / t2.term_.first;
-        size_t size = term1.term_.second.size();
+        size_t size = term1->term_.second.size();
         std::vector<int> finalPowers{};
 
         std::vector<int> powers1{};
         std::vector<int> powers2{};
 
-        for(const auto& var_pow: term1.term_.second){
+        for(const auto& var_pow: term1->term_.second){
             powers1.push_back(var_pow.second);
 
         }
 
-        for(const auto& var_pow: term2.term_.second){
+        for(const auto& var_pow: term2->term_.second){
             powers2.push_back(var_pow.second);
         }
 
@@ -181,11 +181,13 @@ private:
     void sortPoly(int flag = 0);
     bool isPolyZero(const MultivariatePolynomial&);
     //sa stergi static de la canDivide
-    static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
+//    static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
     int sumOfPowers(const Term&);
-    int getDegree() const;
+//    std::vector<int> getDegree(const MultivariatePolynomial&) const;
 
 public:
+    static std::vector<int> getDegree(MultivariatePolynomial&, bool flag = false);//if flag == 0 => min degree, if flag == 1 => max degree
+    static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
     void addTerm(const Term& term);
     static MultivariatePolynomial addPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
     static MultivariatePolynomial subtractPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
@@ -195,16 +197,12 @@ public:
     friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
         if(poly.terms_.size() > 1)
             poly.processPoly();
-//        std::cout<<"afisam polinom..."<<poly.terms_.size();
         os << poly.terms_[0] << " ";
-//        std::cout<<"1\n";
         for(size_t i = 1; i < poly.terms_.size(); ++i){
             if (poly.terms_[i].term_.first > 0){
-//                std::cout<<"2\n";
                 os << "+" << poly.terms_[i] << " ";
             }
             else{
-//                std::cout<<"3\n";
                 os << poly.terms_[i] << " ";
             }
         }

@@ -52,10 +52,10 @@ int main() {
 //    p1->addTerm(std::make_pair(boost::rational<int>(3,1), 5));
 //    p1->addTerm(std::make_pair(boost::rational<int>(11,1),1));
 //    p1->addTerm(std::make_pair(boost::rational<int>(9,1),0));
-//    p1->addTerm(std::make_pair(boost::rational<int>(1, 1),3));
-//    p1->addTerm(std::make_pair(boost::rational<int>(-3, 1),2));
-//    p1->addTerm(std::make_pair(boost::rational<int>(3, 1),1));
-//    p1->addTerm(std::make_pair(boost::rational<int>(-1, 1),0));
+//    p1->addTerm(std::make_pair(boost::rational<int>(1,1),3));
+//    p1->addTerm(std::make_pair(boost::rational<int>(-3,1),2));
+//    p1->addTerm(std::make_pair(boost::rational<int>(3,1),1));
+//    p1->addTerm(std::make_pair(boost::rational<int>(-1,1),0));
 //    Polynomial::printPoly(*p1);
 
 //    std::unique_ptr<Polynomial> p2 = std::make_unique<Polynomial>();
@@ -91,31 +91,31 @@ int main() {
     MultivariatePolynomial mvp1;
     MultivariatePolynomial mvp2;
 
-    Term t1 = Term(boost::rational<int>(1,1), {3,2});
-    Term t2 = Term(boost::rational<int>(1,1), {1,2});
-    Term t3 = Term(boost::rational<int>(-5,1), {0});
-    Term t8 = Term(boost::rational<int>(2,1), {0,9});
-    Term t7 = Term(boost::rational<int>(3,1), {1,3});
-    Term t9 = Term(boost::rational<int>(7,1), {2,2,4});
-    Term t10 = Term(boost::rational<int>(-2,1), {0,9});
+    Term t1 = Term(boost::rational<int>(1,1), {2,3,1});
+    Term t2 = Term(boost::rational<int>(1,1), {1,1,2});
+    Term t3 = Term(boost::rational<int>(1,1), {3,2,3});
+    Term t4 = Term(boost::rational<int>(1,1), {2,2,1});
+    Term t5 = Term(boost::rational<int>(1,1), {1});
+    Term t6 = Term(boost::rational<int>(1,1), {0,1});
 
-    mvp1.addTerm(t1);
-    mvp1.addTerm(t3);
     mvp1.addTerm(t2);
-
-    mvp2.addTerm(t3);
-    mvp2.addTerm(t7);
-    mvp2.addTerm(t9);
-
+    mvp1.addTerm(t3);
+    mvp1.addTerm(t1);
     std::cout<<mvp1<<"\n";
-//    std::cout<<t3<<"\n"<<t7<<"\n"<<t8<<"\n";
+
+    mvp2.addTerm(t4);
     std::cout<<mvp2<<"\n";
 
-    MultivariatePolynomial result = MultivariatePolynomial::multiplyPolynomials(mvp1,mvp2);
-    std::cout<<result;
+    std::vector<int> v1 = MultivariatePolynomial::getDegree(mvp1);
+    std::vector<int> v2 = MultivariatePolynomial::getDegree(mvp2);
 
-//    auto result = MultivariatePolynomial::dividePolynomials(mvp1, mvp2);
-//    std::cout<< result.first;
+    for(int a : v1)
+        std::cout<<a<<" ";
+    std::cout<<"\n";
+    for(int a : v2)
+        std::cout<<a<<" ";
+    std::cout<<"\n";
+    std::cout<<MultivariatePolynomial::canDivide(mvp1, mvp2);
 
     return 0;
 }

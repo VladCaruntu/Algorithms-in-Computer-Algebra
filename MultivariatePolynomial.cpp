@@ -9,6 +9,7 @@
 
 void MultivariatePolynomial::addTerm(const Term &term) {
     this->terms_.push_back(term);
+    this->processPoly();/////////
 }
 
 int MultivariatePolynomial::sumOfPowers(const Term& term){
@@ -19,13 +20,60 @@ int MultivariatePolynomial::sumOfPowers(const Term& term){
     return sum;
 }
 
+bool compareTermAlphabeticallyWithExistingVariables(const Term& t1, const Term& t2)
+{
+    const std::map<char, int>& term1Powers = t1.term_.second;
+    const std::map<char, int>& term2Powers = t2.term_.second;
+
+    // Iterate over the existing variables in each term and compare alphabetically
+    for (const auto& term : term1Powers)
+    {
+        const auto& var1 = term.first;
+        const auto& power1 = term.second;
+
+        if (term2Powers.count(var1) == 0)
+        {
+            // Variable in t1 does not exist in t2, so t1 comes first
+            return true;
+        } else
+        {
+            // Compare the powers of the common variable alphabetically
+            int power2 = term2Powers.at(var1);
+            if (power1 != power2)
+            {
+                return power1 > power2;
+            }
+        }
+    }
+
+    // All variables in t1 exist in t2 or there are no variables in t1
+    // Compare remaining variables in t2 that don't exist in t1
+    for (const auto& [var2, _] : term2Powers)
+    {
+        if (term1Powers.count(var2) == 0)
+        {
+            // Variable in t2 does not exist in t1, so t2 comes first
+            return false;
+        }
+    }
+    // All variables are equal, shorter term comes first
+    return term1Powers.size() < term2Powers.size();
+}
+
 void MultivariatePolynomial::sortPoly(int flag) {
     switch (flag) {
         case 0:
             std::sort(this->terms_.begin(), this->terms_.end(),
-                      [this](const Term &t1, const Term &t2){
-                return sumOfPowers(t1) > sumOfPowers(t2);
-            });
+                      [this](const Term& t1, const Term& t2) {
+                          int sum1 = sumOfPowers(t1);
+                          int sum2 = sumOfPowers(t2);
+
+                          if (sum1 != sum2) {
+                              return sum1 > sum2;
+                          }
+                          return compareTermAlphabeticallyWithExistingVariables(t1, t2);
+                      }
+            );
             break;
 
         case 1:
@@ -58,9 +106,8 @@ void MultivariatePolynomial::processPoly(){
 
     boost::rational<int> tempCoeff = 0;
     size_t nrOfVars = this->terms_[0].term_.second.size();
-    std::vector<int> tempVector (nrOfVars, maxDNE);
+    std::vector<int> tempVector (nrOfVars, maxDNE + 1);
     this->terms_.push_back(Term(boost::rational<int>(1,1), tempVector));
-
     size_t i = 0;
     while(i < this->terms_.size()){
         if(this->terms_[i] == this->terms_[i + 1]){
@@ -151,8 +198,9 @@ std::vector<int> MultivariatePolynomial::getDegree(MultivariatePolynomial& p, bo
         }
     }
     size_t nrOfVariables = p.terms_[0].term_.second.size();
-    //in powers we put the first element
+
     std::vector<int> powers;
+    //initialization
     if(flag) // for max
     {
         powers = std::vector<int>(nrOfVariables, -1);
@@ -163,7 +211,6 @@ std::vector<int> MultivariatePolynomial::getDegree(MultivariatePolynomial& p, bo
     }
 
     size_t i = 0;
-
     for(const auto& term: p.terms_)
     {
         for(const auto& monomial: term.term_.second)
@@ -175,7 +222,6 @@ std::vector<int> MultivariatePolynomial::getDegree(MultivariatePolynomial& p, bo
             else{
                 powers[i++] = std::min(powers[i], monomial.second);
             }
-//            std::cout<<monomial.first<<" "<<monomial.second<<"\n";
         }
         i = 0;
     }
@@ -222,47 +268,46 @@ bool MultivariatePolynomial::canDivide(const MultivariatePolynomial& p1, const M
 }
 
 std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> MultivariatePolynomial::dividePolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2) {
-    std::unique_ptr<MultivariatePolynomial> p1_copy = std::make_unique<MultivariatePolynomial>(p1);
-    std::unique_ptr<MultivariatePolynomial> p2_copy = std::make_unique<MultivariatePolynomial>(p2);
-    p1_copy->processPoly();
-    p2_copy->processPoly();
+    MultivariatePolynomial p1_copy = p1;
+    MultivariatePolynomial p2_copy = p2;
+    p1_copy.processPoly();
 
     MultivariatePolynomial quotient;
     MultivariatePolynomial tempPoly;
     MultivariatePolynomial p_temp;
     std::vector<MultivariatePolynomial> reminders{};
 
-//    int firstDeg = p1.getDegree();
-//    const int secondDeg = p2.getDegree();
-//
-//    std::cout<<canDivide(p1, p2);
-//    return std::make_pair(*p1_copy, reminders);
-//
-//    Term tempTerm = Term(boost::rational<int>(0, 1),{0});
-//    if(firstDeg >= secondDeg)
-//    {
-//        int iter = 1;
-//        while(firstDeg >= secondDeg)
-//        {
-//            std::cout<<"Iteratia " << iter++ << ":\n";
-//            tempTerm = p1_copy->terms_[0] / p2_copy->terms_[0];
-//            std::cout<<tempTerm<<'\n';
-//            tempPoly.addTerm(tempTerm);
-//            p_temp = MultivariatePolynomial::subtractPolynomials(p1, MultivariatePolynomial::multiplyPolynomials(tempPoly, *p2_copy));
-//            *p1_copy = p_temp;
-//            std::cout<<"Poly: " << *p1_copy<<"\n";
-//            firstDeg = p1_copy->getDegree();
-//            std::cout<<firstDeg<<"-------"<<secondDeg<<'\n';
-//            tempPoly.terms_.clear();
-//            std::cout<<"tempTerm: "<<tempTerm<<"\n";
-//            quotient.addTerm(tempTerm);
-//            reminders.push_back(*p1_copy);
-//        }
-//        return std::make_pair(quotient, reminders);
-//    }
-//    else
-//    {
-//        std::cerr << "Error: The first degree must be greater or equal to the second degree!";
-//        return std::make_pair(*p1_copy, reminders);
-//    }
+    std::vector<int> firstDeg = getDegree(p1_copy);
+    const std::vector<int> secondDeg = getDegree(p2_copy);
+
+    Term tempTerm = Term(boost::rational<int>(0, 1),{0});
+    if(canDivide(p1, p2))
+    {
+        int iter = 0;
+        while(canDivide(p1_copy, p2_copy))
+        {
+            std::cout<<"\nIteratia " << iter++ << ":\n";
+            tempTerm = p1_copy.terms_[0] / p2_copy.terms_[0];
+            tempPoly.addTerm(tempTerm);
+            std::cout<<"tempPoly = " << tempPoly << "\n";
+            std::cout<<"P2 = " << p2_copy<<"\n";
+            std::cout<<"P1 = " << p1_copy<<"\n";
+            MultivariatePolynomial multiplication_result = MultivariatePolynomial::multiplyPolynomials(tempPoly, p2_copy);
+            MultivariatePolynomial subtraction_result = MultivariatePolynomial::subtractPolynomials(p1_copy, multiplication_result);
+            std::cout << "mult = "<< multiplication_result<<"\n";
+            std::cout << "sub = " << subtraction_result<<"\n";
+            p1_copy = subtraction_result;
+            tempPoly.terms_.clear();
+            tempPoly.processPoly();
+            std::cout<<"P1 after: "<<p1_copy;
+            quotient.addTerm(tempTerm);
+            reminders.push_back(p1_copy);
+        }
+        return std::make_pair(quotient, reminders);
+    }
+    else
+    {
+        std::cerr << "Error: The first degree must be greater or equal to the second degree!";
+        return std::make_pair(p1_copy, reminders);
+    }
 }

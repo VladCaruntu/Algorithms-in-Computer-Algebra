@@ -177,8 +177,8 @@ class MultivariatePolynomial {
 private:
     std::vector<Term> terms_;
 
-    void processPoly();
-    void sortPoly(int flag = 0);
+//    void processPoly();
+//    void sortPoly(int flag = 0);
     bool isPolyZero(const MultivariatePolynomial&);
     //sa stergi static de la canDivide
 //    static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
@@ -186,6 +186,9 @@ private:
 //    std::vector<int> getDegree(const MultivariatePolynomial&) const;
 
 public:
+    void sortPoly(int flag = 0);
+    std::vector<Term> getTerms() const { return this->terms_;}
+    void processPoly();
     static std::vector<int> getDegree(MultivariatePolynomial&, bool flag = false);//if flag == 0 => min degree, if flag == 1 => max degree
     static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
     void addTerm(const Term& term);
@@ -196,7 +199,9 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
         if(poly.terms_.size() > 1)
+        {
             poly.processPoly();
+        }
         os << poly.terms_[0] << " ";
         for(size_t i = 1; i < poly.terms_.size(); ++i){
             if (poly.terms_[i].term_.first > 0){

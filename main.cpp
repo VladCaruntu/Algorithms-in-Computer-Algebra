@@ -91,31 +91,34 @@ int main() {
     MultivariatePolynomial mvp1;
     MultivariatePolynomial mvp2;
 
-    Term t1 = Term(boost::rational<int>(1,1), {2,3,1});
-    Term t2 = Term(boost::rational<int>(1,1), {1,1,2});
-    Term t3 = Term(boost::rational<int>(1,1), {3,2,3});
-    Term t4 = Term(boost::rational<int>(1,1), {2,2,1});
-    Term t5 = Term(boost::rational<int>(1,1), {1});
-    Term t6 = Term(boost::rational<int>(1,1), {0,1});
+    Term t1 = Term(boost::rational<int>(1,1), {2,3});// 2 3
+    Term t2 = Term(boost::rational<int>(1,1), {3,4});// 3 4
+    Term t3 = Term(boost::rational<int>(1,1), {3,2});// 3 2
+    Term t4 = Term(boost::rational<int>(1,1), {2,1});// 2 1
+    Term t5 = Term(boost::rational<int>(1,1), {1});// 1
+    Term t6 = Term(boost::rational<int>(1,1), {0,1});// 0 1
+    Term t7 = Term(boost::rational<int>(-1,1), {2,3});// 2 3
 
-    mvp1.addTerm(t2);
+    mvp1.addTerm(t4);
     mvp1.addTerm(t3);
-    mvp1.addTerm(t1);
-    std::cout<<mvp1<<"\n";
+    mvp1.addTerm(t2);
 
+//    mvp1.processPoly();
     mvp2.addTerm(t4);
-    std::cout<<mvp2<<"\n";
 
-    std::vector<int> v1 = MultivariatePolynomial::getDegree(mvp1);
-    std::vector<int> v2 = MultivariatePolynomial::getDegree(mvp2);
+    auto plus = MultivariatePolynomial::addPolynomials(mvp1,mvp2);
+    auto minus = MultivariatePolynomial::subtractPolynomials(mvp1,mvp2);
+    auto mult = MultivariatePolynomial::multiplyPolynomials(mvp1,mvp2);
 
-    for(int a : v1)
-        std::cout<<a<<" ";
-    std::cout<<"\n";
-    for(int a : v2)
-        std::cout<<a<<" ";
-    std::cout<<"\n";
-    std::cout<<MultivariatePolynomial::canDivide(mvp1, mvp2);
+    std::cout<<"plus: " << plus <<"\n" << "minus: " << minus << "\nmult: " << mult << std::endl;
+
+    auto result = MultivariatePolynomial::dividePolynomials(mvp1, mvp2);
+    std::cout<<"QUOT: "<<result.first<<"\n";
+    std::cout<<"REMS:\n";
+    for(auto & term: result.second)
+    {
+        std::cout<<term <<"\n";
+    }
 
     return 0;
 }

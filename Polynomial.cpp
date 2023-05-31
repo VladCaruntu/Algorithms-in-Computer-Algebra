@@ -181,24 +181,16 @@ std::pair<Polynomial, std::vector<Polynomial>> Polynomial::dividePoly(Polynomial
     std::pair<boost::rational<int>, int> tempTerm;
     if(firstDeg >= secondDeg)
     {
-        int iter = 1;
         while(firstDeg >= secondDeg)
         {
-            std::cout<<"Iteratia " << iter++ <<":\n";
-            //aici formez termenul care se va inmulti cu impartitorul
             tempTerm = std::make_pair(p1.terms_[0].first / p2.terms_[0].first, p1.terms_[0].second - p2.terms_[0].second);
-            tempPoly.addTerm(tempTerm);     //transform din std::pair in Polynomial ca sa il pot scadea din p1
-            //aici updatez p1 cu noua valoare, dupa ce scad din el p2 * tempPoly
+            tempPoly.addTerm(tempTerm);
             p_temp = Polynomial::subtractPoly(p1, Polynomial::multiplyPoly(tempPoly, p2));
             p1 = p_temp;
-            std::cout<<"Poly: ";
-            Polynomial::printPoly(p1);
-            std::cout<<"\n";
-            firstDeg = p1.terms_[0].second;     //aici iau din nou gradul
-            //curat tempPoly ca sa nu retina inmultirile precedente
+            firstDeg = p1.terms_[0].second;
             tempPoly.terms_.clear();
-            quotient.addTerm(tempTerm);     //aici formez catul
-            reminders.push_back(p1);              //aici fac resturile
+            quotient.addTerm(tempTerm);
+            reminders.push_back(p1);
         }
         return std::make_pair(quotient, reminders);
     }

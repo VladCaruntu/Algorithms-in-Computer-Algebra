@@ -91,34 +91,31 @@ int main() {
     MultivariatePolynomial mvp1;
     MultivariatePolynomial mvp2;
 
-    Term t1 = Term(boost::rational<int>(1,1), {2,3});// 2 3
-    Term t2 = Term(boost::rational<int>(1,1), {3,4});// 3 4
-    Term t3 = Term(boost::rational<int>(1,1), {3,2});// 3 2
-    Term t4 = Term(boost::rational<int>(1,1), {2,1});// 2 1
-    Term t5 = Term(boost::rational<int>(1,1), {1});// 1
-    Term t6 = Term(boost::rational<int>(1,1), {0,1});// 0 1
-    Term t7 = Term(boost::rational<int>(-1,1), {2,3});// 2 3
+    //ADD 0 FOR ALL THE TERMS THAT DON'T EXIST
+    Term t1 = Term(boost::rational<int>(5,1), {3,2,2,1});
+    Term t2 = Term(boost::rational<int>(-2,1), {2,3,3,2});
+    Term t3 = Term(boost::rational<int>(6,1), {1,4,4,3});
+    Term t4 = Term(boost::rational<int>(1,1), {1,2,1,1});
+    Term t5 = Term(boost::rational<int>(1,1), {0,1});
+    Term t6 = Term(boost::rational<int>(3,1), {0});
+    Term t7 = Term(boost::rational<int>(-1,1), {2,3});
 
-    mvp1.addTerm(t4);
+    mvp1.addTerm(t1);
     mvp1.addTerm(t3);
     mvp1.addTerm(t2);
+    std::cout<<mvp1<<"\n";
 
-//    mvp1.processPoly();
     mvp2.addTerm(t4);
+//    mvp2.addTerm(t5);
+    std::cout<<mvp2<<"\n";
 
-    auto plus = MultivariatePolynomial::addPolynomials(mvp1,mvp2);
-    auto minus = MultivariatePolynomial::subtractPolynomials(mvp1,mvp2);
-    auto mult = MultivariatePolynomial::multiplyPolynomials(mvp1,mvp2);
-
-    std::cout<<"plus: " << plus <<"\n" << "minus: " << minus << "\nmult: " << mult << std::endl;
 
     auto result = MultivariatePolynomial::dividePolynomials(mvp1, mvp2);
-    std::cout<<"QUOT: "<<result.first<<"\n";
-    std::cout<<"REMS:\n";
-    for(auto & term: result.second)
-    {
-        std::cout<<term <<"\n";
-    }
+    std::cout<<"QUOTIENT: "<<result.first<<"\n";
+//    std::cout<<"REMINDRES:\n";
+//    for(auto rem: result.second)
+//        std::cout<<rem<<"\n";
+    std::cout<<"REMINDER: "<<result.second[result.second.size() - 1]<<"\n";
 
     return 0;
 }

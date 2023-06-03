@@ -9,7 +9,9 @@
 
 void MultivariatePolynomial::addTerm(const Term &term) {
     this->terms_.push_back(term);
-    this->processPoly();/////////
+    if(this->terms_.size() > 1) {
+        this->processPoly();/////////
+    }
 }
 
 int MultivariatePolynomial::sumOfPowers(const Term& term){
@@ -184,6 +186,7 @@ MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const Multiva
             p_temp->terms_.push_back(term1 * term2);
         }
     }
+
     p_temp->processPoly();
     return *p_temp;
 }
@@ -234,9 +237,7 @@ bool MultivariatePolynomial::canDivide(const MultivariatePolynomial& p1, const M
     std::unique_ptr<MultivariatePolynomial> p2_copy = std::make_unique<MultivariatePolynomial>(p2);
     //if p2 is 0
     if(p2.terms_.size() == 1 && p2.terms_[0].term_.first == 0)
-    {
         return false;
-    }
 
     size_t maxVariablesP2 = 0, maxVariablesP1 = 0;
     //Each variable in the dividend should also appear in the divisor, and vice versa
@@ -270,7 +271,8 @@ bool MultivariatePolynomial::canDivide(const MultivariatePolynomial& p1, const M
 std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> MultivariatePolynomial::dividePolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2) {
     MultivariatePolynomial p1_copy = p1;
     MultivariatePolynomial p2_copy = p2;
-    p1_copy.processPoly();
+    int nrOfVars = p1.terms_[0].term_.second.size();
+//    p1_copy.processPoly();
 
     MultivariatePolynomial quotient;
     MultivariatePolynomial tempPoly;
@@ -283,31 +285,40 @@ std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> Multivari
     Term tempTerm = Term(boost::rational<int>(0, 1),{0});
     if(canDivide(p1, p2))
     {
-        int iter = 0;
         while(canDivide(p1_copy, p2_copy))
         {
-            std::cout<<"\nIteratia " << iter++ << ":\n";
             tempTerm = p1_copy.terms_[0] / p2_copy.terms_[0];
             tempPoly.addTerm(tempTerm);
-            std::cout<<"tempPoly = " << tempPoly << "\n";
-            std::cout<<"P2 = " << p2_copy<<"\n";
-            std::cout<<"P1 = " << p1_copy<<"\n";
             MultivariatePolynomial multiplication_result = MultivariatePolynomial::multiplyPolynomials(tempPoly, p2_copy);
             MultivariatePolynomial subtraction_result = MultivariatePolynomial::subtractPolynomials(p1_copy, multiplication_result);
-            std::cout << "mult = "<< multiplication_result<<"\n";
-            std::cout << "sub = " << subtraction_result<<"\n";
             p1_copy = subtraction_result;
-            tempPoly.terms_.clear();
-            tempPoly.processPoly();
-            std::cout<<"P1 after: "<<p1_copy;
             quotient.addTerm(tempTerm);
             reminders.push_back(p1_copy);
+            tempPoly.terms_.clear();
+        }
+
+        std::unique_ptr<MultivariatePolynomial> poly = std::make_unique<MultivariatePolynomial>();
+        std::vector<int> tempVector {};
+        for(size_t index = 0; index < nrOfVars; index++){
+            tempVector.push_back(0);
+        }
+        poly->terms_.push_back(Term(boost::rational<int>(0,1), tempVector));
+        if(reminders[reminders.size() - 1] == *poly)    //reminder is 0
+        {
+            if(!canDivide(reminders[reminders.size() - 2], p2))
+                std::cout<<"The GCD of the 2 polynomials is: " << reminders[reminders.size() - 2] << "\n";
+            else
+                std::cout<<"The GCD of the 2 polynomials is: " << p2_copy << "\n";
+        }
+        else
+        {
+            std::cout<<"The GCD of the 2 polynomials is: 1\n";
         }
         return std::make_pair(quotient, reminders);
     }
     else
     {
-        std::cerr << "Error: The first degree must be greater or equal to the second degree!";
+        std::cerr << "Error: The first degree must be greater or equal to the second degree!\n";
         return std::make_pair(p1_copy, reminders);
     }
 }

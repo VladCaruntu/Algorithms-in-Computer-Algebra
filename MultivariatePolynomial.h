@@ -198,10 +198,10 @@ public:
     static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&);
 
     friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
-        if(poly.terms_.size() > 1)
-        {
-            poly.processPoly();
-        }
+//        if(poly.terms_.size() > 1)
+//        {
+//            poly.processPoly();
+//        }
         os << poly.terms_[0] << " ";
         for(size_t i = 1; i < poly.terms_.size(); ++i){
             if (poly.terms_[i].term_.first > 0){
@@ -213,6 +213,24 @@ public:
         }
         return os;
     }
+
+    friend bool operator==(const MultivariatePolynomial& lhs, const MultivariatePolynomial& rhs) {
+        const std::vector<Term>& lhsTerms = lhs.terms_;
+        const std::vector<Term>& rhsTerms = rhs.terms_;
+
+        if (lhsTerms.size() != rhsTerms.size()) {
+            return false;
+        }
+
+        for (size_t i = 0; i < lhsTerms.size(); i++) {
+            if (!(lhsTerms[i] == rhsTerms[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     MultivariatePolynomial& operator= (const MultivariatePolynomial& other){
         if (this == &other){

@@ -40,63 +40,49 @@ int main() {
 //        std::cout << c[i] << " ";
 //    }
 
-//    std::unique_ptr<Polynomial> p1 = std::make_unique<Polynomial>();
-//    p1->addTerm(std::make_pair(boost::rational<int>(32,1),1));
-//    p1->addTerm(std::make_pair(boost::rational<int>(1,1),5));
-//    p1->addTerm(std::make_pair(boost::rational<int>(-32,1),3));
+//    Polynomial p1;
+//    p1.addTerm(std::make_pair(boost::rational<int>(3,1),5));
+//    p1.addTerm(std::make_pair(boost::rational<int>(6,1), 2));
+//    p1.addTerm(std::make_pair(boost::rational<int>(8,1),4));
+//    p1.addTerm(std::make_pair(boost::rational<int>(-2,1), 0));
 //
-//    p1->addTerm(std::make_pair(boost::rational<int>(2,1),1));
-//    p1->addTerm(std::make_pair(boost::rational<int>(1,1), 0));
-//    p1->addTerm(std::make_pair(boost::rational<int>(1,1), 2));
-//    p1->addTerm(std::make_pair(boost::rational<int>(-7,1), 3));
-//    p1->addTerm(std::make_pair(boost::rational<int>(3,1), 5));
-//    p1->addTerm(std::make_pair(boost::rational<int>(11,1),1));
-//    p1->addTerm(std::make_pair(boost::rational<int>(9,1),0));
-//    p1->addTerm(std::make_pair(boost::rational<int>(1,1),3));
-//    p1->addTerm(std::make_pair(boost::rational<int>(-3,1),2));
-//    p1->addTerm(std::make_pair(boost::rational<int>(3,1),1));
-//    p1->addTerm(std::make_pair(boost::rational<int>(-1,1),0));
-//    Polynomial::printPoly(*p1);
-
-//    std::unique_ptr<Polynomial> p2 = std::make_unique<Polynomial>();
-//    p2->addTerm(std::make_pair(boost::rational<int>(1,1),2));
-//    p2->addTerm(std::make_pair(boost::rational<int>(5,1),1));
-//    p2->addTerm(std::make_pair(boost::rational<int>(7,1),3));
-//    p2->addTerm(std::make_pair(boost::rational<int>(1,1),1));
-//    p2->addTerm(std::make_pair(boost::rational<int>(1,1),0));
-
-//    Polynomial::printPoly(*p1);
-//    Polynomial::printPoly(*p2);
-//    Polynomial ppp = Polynomial::subtractPoly(*p1, *p2);
-//    Polynomial::printPoly(ppp);
-
-//    Polynomial::printPoly(*p2);
-//    auto result = Polynomial::dividePoly(*p1,*p2);
-//    auto quotient = result.first;
-//    auto reminders = result.second;
+//    Polynomial p2;
+//    p2.addTerm(std::make_pair(boost::rational<int>(-2,1),1));
+//    p2.addTerm(std::make_pair(boost::rational<int>(1,1),0));
+//    p2.addTerm(std::make_pair(boost::rational<int>(1,1),3));
+//
+//    std::cout<<"P1: ";
+//    Polynomial::printPoly(p1);
+//    std::cout<<"P2: ";
+//    Polynomial::printPoly(p2);
+//
+//    Polynomial add = Polynomial::addPoly(p1, p2);
+//    Polynomial sub = Polynomial::subtractPoly(p1, p2);
+//    Polynomial mul = Polynomial::multiplyPoly(p1, p2);
+//
+//    Polynomial::printPoly(add);
+//    Polynomial::printPoly(sub);
+//    Polynomial::printPoly(mul);
+//
+//    auto result1 = Polynomial::dividePoly(p1,p2);
+//    auto quotient = result1.first;
+//    auto reminders = result1.second;
 //
 //    std::cout<<"Quot: ";
 //    Polynomial::printPoly(quotient);
-//    for(const auto& term: Polynomial::getTerms(quotient))
-//    {
-//        std::cout<<term.first<<"x^"<<term.second<<"\n";
-//    }
-//    std::cout<<"\n";
 //
-//    std::cout<<"Reminders: ";
-//    for(auto& reminder: reminders){
-//        Polynomial::printPoly(reminder);
-//    }
+//    std::cout<<"Reminder: ";
+//    Polynomial::printPoly(reminders[reminders.size() - 1]);
 
     MultivariatePolynomial mvp1;
     MultivariatePolynomial mvp2;
 
     //ADD 0 FOR ALL THE TERMS THAT DON'T EXIST
-    Term t1 = Term(boost::rational<int>(5,1), {3,2,2,1});
-    Term t2 = Term(boost::rational<int>(-2,1), {2,3,3,2});
-    Term t3 = Term(boost::rational<int>(6,1), {1,4,4,3});
-    Term t4 = Term(boost::rational<int>(1,1), {1,2,1,1});
-    Term t5 = Term(boost::rational<int>(1,1), {0,1});
+    Term t1 = Term(boost::rational<int>(3,1), {1,1,2});
+    Term t2 = Term(boost::rational<int>(2,1), {1,3,2});
+    Term t3 = Term(boost::rational<int>(-5,1), {2,2,3});
+    Term t4 = Term(boost::rational<int>(2,1), {1,1,1});
+    Term t5 = Term(boost::rational<int>(4,1), {0,0,0});
     Term t6 = Term(boost::rational<int>(3,1), {0});
     Term t7 = Term(boost::rational<int>(-1,1), {2,3});
 
@@ -106,15 +92,12 @@ int main() {
     std::cout<<mvp1<<"\n";
 
     mvp2.addTerm(t4);
-//    mvp2.addTerm(t5);
+    mvp2.addTerm(t5);
     std::cout<<mvp2<<"\n";
 
 
     auto result = MultivariatePolynomial::dividePolynomials(mvp1, mvp2);
     std::cout<<"QUOTIENT: "<<result.first<<"\n";
-//    std::cout<<"REMINDRES:\n";
-//    for(auto rem: result.second)
-//        std::cout<<rem<<"\n";
     std::cout<<"REMINDER: "<<result.second[result.second.size() - 1]<<"\n";
 
     return 0;

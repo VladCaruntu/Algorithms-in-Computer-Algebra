@@ -10,7 +10,7 @@
 void MultivariatePolynomial::addTerm(const Term &term) {
     this->terms_.push_back(term);
     if(this->terms_.size() > 1) {
-        this->processPoly();/////////
+        this->processPoly();
     }
 }
 
@@ -77,15 +77,6 @@ void MultivariatePolynomial::sortPoly(int flag) {
                       }
             );
             break;
-
-        case 1:
-            break;
-
-        case 2:
-            break;
-
-        default:
-            break;
     }
 }
 
@@ -150,7 +141,10 @@ void MultivariatePolynomial::processPoly(){
     }
 }
 
-MultivariatePolynomial MultivariatePolynomial::addPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2){
+MultivariatePolynomial MultivariatePolynomial::addPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2, bool flag){
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
     std::unique_ptr<MultivariatePolynomial> p_temp = std::make_unique<MultivariatePolynomial>();
     for(const auto& el: p1.terms_){
         p_temp->terms_.push_back(el);
@@ -159,10 +153,21 @@ MultivariatePolynomial MultivariatePolynomial::addPolynomials(const Multivariate
         p_temp->terms_.push_back(el);
     }
     p_temp->processPoly();
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+    time_taken *= 1e-9;
+    if(flag) {
+        std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
+                  << std::setprecision(10) << " seconds" << std::endl;
+    }
     return *p_temp;
 }
 
-MultivariatePolynomial MultivariatePolynomial::subtractPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2){
+MultivariatePolynomial MultivariatePolynomial::subtractPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2, bool flag){
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
     std::unique_ptr<MultivariatePolynomial> p_temp = std::make_unique<MultivariatePolynomial>();
     std::unique_ptr<MultivariatePolynomial> p2_copy = std::make_unique<MultivariatePolynomial>(p2);
     for(const auto& el: p1.terms_){
@@ -175,10 +180,21 @@ MultivariatePolynomial MultivariatePolynomial::subtractPolynomials(const Multiva
     }
 
     p_temp->processPoly();
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+    time_taken *= 1e-9;
+    if(flag) {
+        std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
+                  << std::setprecision(10) << " seconds" << std::endl;
+    }
     return *p_temp;
 }
 
-MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2){
+MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2, bool flag){
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
     std::unique_ptr<MultivariatePolynomial> p_temp = std::make_unique<MultivariatePolynomial>();
 
     for(const auto& term1: p1.terms_){
@@ -188,6 +204,14 @@ MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const Multiva
     }
 
     p_temp->processPoly();
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+    time_taken *= 1e-9;
+    if(flag) {
+        std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
+                  << std::setprecision(10) << " seconds" << std::endl;
+    }
     return *p_temp;
 }
 
@@ -268,11 +292,14 @@ bool MultivariatePolynomial::canDivide(const MultivariatePolynomial& p1, const M
     return true;
 }
 
-std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> MultivariatePolynomial::dividePolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2) {
+std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> MultivariatePolynomial::dividePolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2, bool flag)
+{
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
     MultivariatePolynomial p1_copy = p1;
     MultivariatePolynomial p2_copy = p2;
     int nrOfVars = p1.terms_[0].term_.second.size();
-//    p1_copy.processPoly();
 
     MultivariatePolynomial quotient;
     MultivariatePolynomial tempPoly;
@@ -289,8 +316,8 @@ std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> Multivari
         {
             tempTerm = p1_copy.terms_[0] / p2_copy.terms_[0];
             tempPoly.addTerm(tempTerm);
-            MultivariatePolynomial multiplication_result = MultivariatePolynomial::multiplyPolynomials(tempPoly, p2_copy);
-            MultivariatePolynomial subtraction_result = MultivariatePolynomial::subtractPolynomials(p1_copy, multiplication_result);
+            MultivariatePolynomial multiplication_result = MultivariatePolynomial::multiplyPolynomials(tempPoly, p2_copy, false);
+            MultivariatePolynomial subtraction_result = MultivariatePolynomial::subtractPolynomials(p1_copy, multiplication_result, false);
             p1_copy = subtraction_result;
             quotient.addTerm(tempTerm);
             reminders.push_back(p1_copy);
@@ -303,7 +330,8 @@ std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> Multivari
             tempVector.push_back(0);
         }
         poly->terms_.push_back(Term(boost::rational<int>(0,1), tempVector));
-        if(reminders[reminders.size() - 1] == *poly)    //reminder is 0
+
+        if(reminders[reminders.size() - 1] == *poly)
         {
             if(!canDivide(reminders[reminders.size() - 2], p2))
                 std::cout<<"The GCD of the 2 polynomials is: " << reminders[reminders.size() - 2] << "\n";
@@ -313,6 +341,14 @@ std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> Multivari
         else
         {
             std::cout<<"The GCD of the 2 polynomials is: 1\n";
+        }
+
+        auto endTime = std::chrono::high_resolution_clock::now();
+        double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+        time_taken *= 1e-9;
+        if(flag) {
+            std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
+                      << std::setprecision(10) << " seconds" << std::endl;
         }
         return std::make_pair(quotient, reminders);
     }

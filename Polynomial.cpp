@@ -81,16 +81,13 @@ Polynomial Polynomial::addPoly(const Polynomial& p1, const Polynomial& p2, bool 
     for(const auto& el : p2.terms_){
         p_temp->terms_.push_back(el);
     }
-
     p_temp->processPoly();
-//    p_temp->isProcessed = true;
 
     auto endTime = std::chrono::high_resolution_clock::now();
     double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
-
     time_taken *= 1e-9;
     if(flag) {
-        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+        std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
                   << std::setprecision(10) << " seconds" << std::endl;
     }
 
@@ -111,16 +108,13 @@ Polynomial Polynomial::subtractPoly(const Polynomial& p1, const Polynomial& p2, 
         boost::rational<int> temp_coeff = el.first * (-1);
         p_temp->terms_.push_back(std::make_pair(temp_coeff, el.second));
     }
-
     p_temp->processPoly();
-//    p_temp->isProcessed = true;
 
     auto endTime = std::chrono::high_resolution_clock::now();
     double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
-
     time_taken *= 1e-9;
     if(flag) {
-        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+        std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
                   << std::setprecision(10) << " seconds" << std::endl;
     }
 
@@ -151,47 +145,78 @@ Polynomial Polynomial::multiplyPoly(const Polynomial& p1, const Polynomial& p2, 
         }
     }
     p_temp->processPoly();
-//    p_temp->isProcessed = true;
 
     auto endTime = std::chrono::high_resolution_clock::now();
     double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
-
     time_taken *= 1e-9;
     if(flag) {
-        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+        std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
                   << std::setprecision(10) << " seconds" << std::endl;
     }
 
     return *p_temp;
 }
 
-//modifica parametri in const si faci copie cu smart pointer la ambele polinoame
-std::pair<Polynomial, std::vector<Polynomial>> Polynomial::dividePoly(Polynomial p1, Polynomial& p2, bool flag)
+std::pair<Polynomial, std::vector<Polynomial>> Polynomial::dividePoly(const Polynomial& p1, const Polynomial& p2, bool flag)
 {
-    p1.processPoly();
-    p2.processPoly();
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
+    Polynomial p1_copy = p1;
+    Polynomial p2_copy = p2;
+    p1_copy.processPoly();
+    p2_copy.processPoly();
     Polynomial quotient;
     Polynomial tempPoly;
     Polynomial p_temp;
     std::vector<Polynomial> reminders {};
 
-    int firstDeg = p1.terms_[0].second;
-    const int secondDeg = p2.terms_[0].second;
+    int firstDeg = p1_copy.terms_[0].second;
+    const int secondDeg = p2_copy.terms_[0].second;
 
     std::pair<boost::rational<int>, int> tempTerm;
     if(firstDeg >= secondDeg)
     {
         while(firstDeg >= secondDeg)
         {
-            tempTerm = std::make_pair(p1.terms_[0].first / p2.terms_[0].first, p1.terms_[0].second - p2.terms_[0].second);
+            tempTerm = std::make_pair(p1_copy.terms_[0].first / p2_copy.terms_[0].first, p1_copy.terms_[0].second - p2_copy.terms_[0].second);
             tempPoly.addTerm(tempTerm);
-            p_temp = Polynomial::subtractPoly(p1, Polynomial::multiplyPoly(tempPoly, p2));
-            p1 = p_temp;
-            firstDeg = p1.terms_[0].second;
-            tempPoly.terms_.clear();
+            p_temp = Polynomial::subtractPoly(p1_copy, Polynomial::multiplyPoly(tempPoly, p2_copy, false), false);
+            p1_copy = p_temp;
+            firstDeg = p1_copy.terms_[0].second;
             quotient.addTerm(tempTerm);
-            reminders.push_back(p1);
+            reminders.push_back(p1_copy);
+            tempPoly.terms_.clear();
         }
+        std::unique_ptr<Polynomial> poly = std::make_unique<Polynomial>();
+        poly->terms_.push_back(std::make_pair(boost::rational<int>(0,1), 0));
+
+        if(*poly == reminders[reminders.size() - 1])
+        {
+            if(reminders[reminders.size() - 2].terms_[0].second <= p2_copy.terms_[0].second){
+                std::cout<<"The GCD of the 2 polynomials is: ";
+                Polynomial::printPoly(reminders[reminders.size() - 2]);
+                std::cout<<"\n";
+            }
+            else{
+                std::cout<<"The GCD of the 2 polynomials is: ";
+                Polynomial::printPoly(p2_copy);
+                std::cout<<"\n";
+            }
+        }
+        else
+        {
+            std::cout<<"The GCD of the 2 polynomials is: 1\n";
+        }
+
+        auto endTime = std::chrono::high_resolution_clock::now();
+        double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+        time_taken *= 1e-9;
+        if(flag) {
+            std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
+                      << std::setprecision(10) << " seconds" << std::endl;
+        }
+
         return std::make_pair(quotient, reminders);
     }
     else
@@ -203,10 +228,6 @@ std::pair<Polynomial, std::vector<Polynomial>> Polynomial::dividePoly(Polynomial
 
 void Polynomial::printPoly(Polynomial& p){
     p.processPoly();
-//    if(!p.isProcessed) {
-//        p.processPoly();
-//        p.isProcessed = true;
-//    }
 
     boost::rational<int> coef{p.terms_[0].first};
     int power{p.terms_[0].second};
@@ -227,7 +248,6 @@ void Polynomial::printPoly(Polynomial& p){
         std::cout << coef << "x^" << power;
     }
 
-    //for the rest of the terms
     for (size_t i{1}; i < p.terms_.size(); i++) {
         coef = p.terms_[i].first;
         power = p.terms_[i].second;

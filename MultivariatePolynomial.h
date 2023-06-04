@@ -192,16 +192,12 @@ public:
     static std::vector<int> getDegree(MultivariatePolynomial&, bool flag = false);//if flag == 0 => min degree, if flag == 1 => max degree
     static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
     void addTerm(const Term& term);
-    static MultivariatePolynomial addPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
-    static MultivariatePolynomial subtractPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&);
-    static MultivariatePolynomial multiplyPolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&);
-    static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&);
+    static MultivariatePolynomial addPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&, bool flag = true);
+    static MultivariatePolynomial subtractPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&, bool flag = true);
+    static MultivariatePolynomial multiplyPolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&, bool flag = true);
+    static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&, bool flag = true);
 
     friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
-//        if(poly.terms_.size() > 1)
-//        {
-//            poly.processPoly();
-//        }
         os << poly.terms_[0] << " ";
         for(size_t i = 1; i < poly.terms_.size(); ++i){
             if (poly.terms_[i].term_.first > 0){
@@ -230,7 +226,6 @@ public:
 
         return true;
     }
-
 
     MultivariatePolynomial& operator= (const MultivariatePolynomial& other){
         if (this == &other){

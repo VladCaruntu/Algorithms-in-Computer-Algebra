@@ -141,7 +141,6 @@ struct Term {
                 finalPowers.push_back(powers1[i] - powers2[i]);
             }
         }
-
         Term result(coef, finalPowers);
         return result;
     }

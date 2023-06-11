@@ -5,9 +5,9 @@
 class EuclideanAlgorithm {
 public:
     EuclideanAlgorithm() = delete;
-    static int euclideanAlgorithmWithSubtractions(int, int, bool flag = false);
-    static int euclideanAlgorithmWithDivisions(int, int, bool flag = false);
-    static int euclideanAlgorithmWithRecursion(int, int, bool flag = false);
+    static int euclideanAlgorithmWithSubtractions(int, int, bool flag = true);
+    static int euclideanAlgorithmWithDivisions(int, int, bool flag = true);
+    static int euclideanAlgorithmWithRecursion(int, int, bool flag = true);
     static int euclideanAlgorithmWithRecursionRunner(int, int);
 };
 #endif

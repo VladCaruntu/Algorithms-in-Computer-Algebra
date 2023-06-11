@@ -6,7 +6,7 @@
 
 class Interpolation {
 public:
-    static double linearInterpolation(std::vector<double>&, std::vector<double>&, double, bool flag = false);
+    static double linearInterpolation(std::vector<double>&, std::vector<double>&, double, bool flag = true);
 };
 
 #endif

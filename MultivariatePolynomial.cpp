@@ -7,6 +7,70 @@
 #include <iomanip>
 #include "boost/rational.hpp"
 
+void MultivariatePolynomial::lexicographicSort()
+{
+    std::sort(this->terms_.begin(), this->terms_.end(),
+              [this](const Term& t1, const Term& t2){
+                  const auto var_pow1 = t1.term_.second;
+                  const auto var_pow2 = t2.term_.second;
+                  auto it1 = var_pow1.begin();
+                  auto it2 = var_pow2.begin();
+                  while(it1 != var_pow1.end() || it2 != var_pow2.end())
+                  {
+                      if(it1->second != it2->second)
+                          return it1->second > it2->second;
+                      it1++;
+                      it2++;
+                  }
+              });
+}
+
+void MultivariatePolynomial::degreeSort()
+{
+    std::sort(this->terms_.begin(), this->terms_.end(),
+              [this](const Term& t1, const Term& t2) {
+                  int sum1 = sumOfPowers(t1);
+                  int sum2 = sumOfPowers(t2);
+
+                  if (sum1 != sum2) {
+                      return sum1 > sum2;
+                  }
+              }
+    );
+}
+
+void MultivariatePolynomial::degreeLexicographicSort()
+{
+    this->degreeSort();
+    size_t size = this->terms_.size();
+    for(size_t i = 0; i < size - 1; i++)
+    {
+        if(sumOfPowers(this->terms_[i]) == sumOfPowers(this->terms_[i + 1]))
+        {
+            std::swap(this->terms_[i], this->terms_[i + 1]);
+        }
+    }
+}
+
+void MultivariatePolynomial::SORTING_TEST(int flag)
+{
+    switch (flag)
+    {
+        case 1:
+            //for graded sorting
+            this->degreeSort();
+            break;
+        case 2:
+            //for lexicographic sorting
+            this->lexicographicSort();
+            break;
+        case 3:
+            //for graded lexicographic sorting
+            this->degreeLexicographicSort();
+            break;
+    }
+}
+
 void MultivariatePolynomial::addTerm(const Term &term) {
     this->terms_.push_back(term);
     if(this->terms_.size() > 1) {
@@ -217,13 +281,13 @@ MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const Multiva
 
 std::vector<int> MultivariatePolynomial::getDegree(MultivariatePolynomial& p, bool flag)
 {
-    for(size_t i = 0; i < p.terms_.size() - 1; i++)
-    {
-        for(size_t j = 0; j < p.terms_.size(); j++)
-        {
-            Term::equalizeTerms(p.terms_[i], p.terms_[j]);
-        }
-    }
+//    for(size_t i = 0; i < p.terms_.size() - 1; i++)
+//    {
+//        for(size_t j = 0; j < p.terms_.size(); j++)
+//        {
+//            Term::equalizeTerms(p.terms_[i], p.terms_[j]);
+//        }
+//    }
     size_t nrOfVariables = p.terms_[0].term_.second.size();
 
     std::vector<int> powers;
@@ -355,6 +419,15 @@ std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> Multivari
     else
     {
         std::cerr << "Error: The first degree must be greater or equal to the second degree!\n";
-        return std::make_pair(p1_copy, reminders);
+        std::unique_ptr<std::vector<MultivariatePolynomial>> tempVect = std::make_unique<std::vector<MultivariatePolynomial>>();
+        tempVect->push_back(p2_copy);
+        auto endTime = std::chrono::high_resolution_clock::now();
+        double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+        time_taken *= 1e-9;
+        if(flag) {
+            std::cout << "The execution of " << __PRETTY_FUNCTION__ << " took " << std::fixed << time_taken
+                      << std::setprecision(10) << " seconds" << std::endl;
+        }
+        return std::make_pair(p1_copy, *tempVect);
     }
 }

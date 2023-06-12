@@ -183,18 +183,16 @@ private:
     void lexicographicSort();
     void degreeSort();
     void degreeLexicographicSort();
-    bool customSort(const Term&, const Term&);
 public:
     void SORTING_TEST(int);
-
     std::vector<Term> getTerms() const { return this->terms_;}
-    static std::vector<int> getDegree(MultivariatePolynomial&, bool flag = false);//if flag == 0 => min degree, if flag == 1 => max degree
+    static std::vector<int> getDegree(MultivariatePolynomial&);
     static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
     void addTerm(const Term& term);
     static MultivariatePolynomial addPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&, bool flag = true);
     static MultivariatePolynomial subtractPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&, bool flag = true);
     static MultivariatePolynomial multiplyPolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&, bool flag = true);
-    static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&, bool flag = true);
+    static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&, int, bool flag = true);
 
     friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
         os << poly.terms_[0] << " ";

@@ -279,40 +279,17 @@ MultivariatePolynomial MultivariatePolynomial::multiplyPolynomials(const Multiva
     return *p_temp;
 }
 
-std::vector<int> MultivariatePolynomial::getDegree(MultivariatePolynomial& p, bool flag)
+std::vector<int> MultivariatePolynomial::getDegree(MultivariatePolynomial& p)
 {
-//    for(size_t i = 0; i < p.terms_.size() - 1; i++)
-//    {
-//        for(size_t j = 0; j < p.terms_.size(); j++)
-//        {
-//            Term::equalizeTerms(p.terms_[i], p.terms_[j]);
-//        }
-//    }
     size_t nrOfVariables = p.terms_[0].term_.second.size();
-
-    std::vector<int> powers;
-    //initialization
-    if(flag) // for max
-    {
-        powers = std::vector<int>(nrOfVariables, -1);
-    }
-    else
-    {
-        powers = std::vector<int>(nrOfVariables, INFINITY);
-    }
-
+    std::vector<int> powers (nrOfVariables, -1);
     size_t i = 0;
-    for(const auto& term: p.terms_)
+
+    for(const auto& term : p.terms_)
     {
-        for(const auto& monomial: term.term_.second)
+        for(const auto& var_pow: term.term_.second)
         {
-            if(flag)
-            {
-                powers[i++] = std::max(powers[i], monomial.second);
-            }
-            else{
-                powers[i++] = std::min(powers[i], monomial.second);
-            }
+            powers[i++] = std::max(powers[i], var_pow.second);
         }
         i = 0;
     }
@@ -327,23 +304,23 @@ bool MultivariatePolynomial::canDivide(const MultivariatePolynomial& p1, const M
     if(p2.terms_.size() == 1 && p2.terms_[0].term_.first == 0)
         return false;
 
-    size_t maxVariablesP2 = 0, maxVariablesP1 = 0;
+//    size_t maxVariablesP2 = 0, maxVariablesP1 = 0;
     //Each variable in the dividend should also appear in the divisor, and vice versa
-    for(const auto & term : p1.terms_)
-    {
-        maxVariablesP1 = std::max(maxVariablesP1, term.term_.second.size());
-    }
-    for(const auto & term : p2.terms_)
-    {
-        maxVariablesP2 = std::max(maxVariablesP2, term.term_.second.size());
-    }
-    if(maxVariablesP1 != maxVariablesP2)
-    {
-        return false;
-    }
+//    for(const auto & term : p1.terms_)
+//    {
+//        maxVariablesP1 = std::max(maxVariablesP1, term.term_.second.size());
+//    }
+//    for(const auto & term : p2.terms_)
+//    {
+//        maxVariablesP2 = std::max(maxVariablesP2, term.term_.second.size());
+//    }
+//    if(maxVariablesP1 != maxVariablesP2)
+//    {
+//        return false;
+//    }
 
-    std::vector<int> deg1 = getDegree(*p1_copy,false);
-    std::vector<int> deg2 = getDegree(*p2_copy, true);
+    std::vector<int> deg1 = getDegree(*p1_copy);
+    std::vector<int> deg2 = getDegree(*p2_copy);
     size_t size = deg1.size();
 
     for(size_t i = 0; i < size; i++)
@@ -356,15 +333,20 @@ bool MultivariatePolynomial::canDivide(const MultivariatePolynomial& p1, const M
     return true;
 }
 
-std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> MultivariatePolynomial::dividePolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2, bool flag)
+std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> MultivariatePolynomial::dividePolynomials(const MultivariatePolynomial& p1, const MultivariatePolynomial& p2, int sort, bool flag)
 {
+    std::cout<<"HELLO! :)\n";
     auto startTime = std::chrono::high_resolution_clock::now();
     std::ios_base::sync_with_stdio(false);
-
+    std::cout<<"-1\n";
     MultivariatePolynomial p1_copy = p1;
     MultivariatePolynomial p2_copy = p2;
-    int nrOfVars = p1.terms_[0].term_.second.size();
+    size_t nrOfVars = p1.terms_[0].term_.second.size();
+    std::cout<<"0\n";
 
+    p1_copy.SORTING_TEST(sort);
+    p2_copy.SORTING_TEST(sort);
+    std::cout<<"1\n";
     MultivariatePolynomial quotient;
     MultivariatePolynomial tempPoly;
     MultivariatePolynomial p_temp;
@@ -372,19 +354,27 @@ std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> Multivari
 
     std::vector<int> firstDeg = getDegree(p1_copy);
     const std::vector<int> secondDeg = getDegree(p2_copy);
+    std::cout<<"2\n";
 
     Term tempTerm = Term(boost::rational<int>(0, 1),{0});
-    if(canDivide(p1, p2))
+    if(canDivide(p1_copy, p2_copy))
     {
         while(canDivide(p1_copy, p2_copy))
         {
+//            std::cout<<"3\n";
             tempTerm = p1_copy.terms_[0] / p2_copy.terms_[0];
             tempPoly.addTerm(tempTerm);
+//            std::cout<<"4\n";
             MultivariatePolynomial multiplication_result = MultivariatePolynomial::multiplyPolynomials(tempPoly, p2_copy, false);
             MultivariatePolynomial subtraction_result = MultivariatePolynomial::subtractPolynomials(p1_copy, multiplication_result, false);
+//            std::cout<<"5\n";
             p1_copy = subtraction_result;
+            p1_copy.SORTING_TEST(sort);
+            std::cout<<p1_copy<<"\n";
+//            std::cout<<"6\n";
             quotient.addTerm(tempTerm);
             reminders.push_back(p1_copy);
+//            std::cout<<"7\n";
             tempPoly.terms_.clear();
         }
 

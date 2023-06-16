@@ -65,6 +65,36 @@ struct Term {
 //        t2 = Term(t2.term_.first, powers2);
 //    }
 
+    friend bool operator>(const Term& t1, const Term& t2)
+    {
+        const auto var_pow1 = t1.term_.second;
+        const auto var_pow2 = t2.term_.second;
+        auto it1 = var_pow1.begin();
+        auto it2 = var_pow2.begin();
+        while(it1 != var_pow1.end() || it2 != var_pow2.end())
+        {
+            if(it1->second != it2->second)
+                return it1->second > it2->second;
+            it1++;
+            it2++;
+        }
+    }
+
+    friend bool operator<(const Term& t1, const Term& t2)
+    {
+        const auto var_pow1 = t1.term_.second;
+        const auto var_pow2 = t2.term_.second;
+        auto it1 = var_pow1.begin();
+        auto it2 = var_pow2.begin();
+        while(it1 != var_pow1.end() || it2 != var_pow2.end())
+        {
+            if(it1->second != it2->second)
+                return it1->second < it2->second;
+            it1++;
+            it2++;
+        }
+    }
+
     bool operator==(const Term& other) const {
         if (term_.second.size() != other.term_.second.size()) {
             return false;
@@ -145,7 +175,6 @@ struct Term {
         return result;
     }
 
-
     friend std::ostream& operator<<(std::ostream& os, const Term& term) {
         if(term.term_.first == 0){
             os << "0";
@@ -177,14 +206,15 @@ private:
     std::vector<Term> terms_;
 
     void processPoly();
-    void sortPoly(int flag = 0);
+    void sortPoly();
     bool isPolyZero(const MultivariatePolynomial&);
-    int sumOfPowers(const Term&);
+//    int sumOfPowers(const Term&);
     void lexicographicSort();
     void degreeSort();
     void degreeLexicographicSort();
 public:
-    void SORTING_TEST(int);
+    int sumOfPowers(const Term&);
+    void SORTING_TEST(const std::string&);
     std::vector<Term> getTerms() const { return this->terms_;}
     static std::vector<int> getDegree(MultivariatePolynomial&);
     static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);
@@ -192,7 +222,7 @@ public:
     static MultivariatePolynomial addPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&, bool flag = true);
     static MultivariatePolynomial subtractPolynomials(const MultivariatePolynomial& , const MultivariatePolynomial&, bool flag = true);
     static MultivariatePolynomial multiplyPolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&, bool flag = true);
-    static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&, int, bool flag = true);
+    static std::pair<MultivariatePolynomial, std::vector<MultivariatePolynomial>> dividePolynomials(const MultivariatePolynomial&, const MultivariatePolynomial&, const std::string&, bool flag = true);
 
     friend std::ostream& operator<<(std::ostream& os, MultivariatePolynomial& poly) {
         os << poly.terms_[0] << " ";

@@ -78,13 +78,13 @@ int main() {
     MultivariatePolynomial mvp2;
 
     //ADD 0 FOR ALL THE TERMS THAT DON'T EXIST
-    Term t1 = Term(boost::rational<int>(1,1), {4,3,2});
-    Term t2 = Term(boost::rational<int>(1,1), {3,1,4});
-    Term t3 = Term(boost::rational<int>(-1,1), {1,2,3});
-    Term t4 = Term(boost::rational<int>(1,1), {1,1,0});
+    Term t1 = Term(boost::rational<int>(1,1), {2,3,2});
+    Term t2 = Term(boost::rational<int>(1,1), {3,1,2});
+    Term t3 = Term(boost::rational<int>(1,1), {1,2,2});
 
-    Term t5 = Term(boost::rational<int>(2,1), {2,1,2});
-    Term t6 = Term(boost::rational<int>(1,1), {0,0,3});
+    Term t4 = Term(boost::rational<int>(1,1), {0,2,1});
+    Term t5 = Term(boost::rational<int>(1,1), {1,1,1});
+    Term t6 = Term(boost::rational<int>(1,1), {2,0,0});
 
     Term t7 = Term(boost::rational<int>(1,1), {2,3,0});
     Term t8 = Term(boost::rational<int>(1,1), {5,1,2});
@@ -101,13 +101,16 @@ int main() {
     mvp1.addTerm(t1);
     mvp1.addTerm(t2);
     mvp1.addTerm(t3);
-    mvp1.addTerm(t4);
 
+    mvp2.addTerm(t4);
     mvp2.addTerm(t5);
     mvp2.addTerm(t6);
 
-    std::string order = "deg";
-
+    std::string order = "deglex";
+//    mvp1.SORTING_TEST(order);
+//    auto v = MultivariatePolynomial::getDegree(mvp1);
+//    for(auto a: v)
+//        std::cout << a<<" ";
     auto result = MultivariatePolynomial::dividePolynomials(mvp1, mvp2, order);
     std::cout<<"QUOTIENT: "<<result.first<<"\n";
     std::cout<<"REMINDER: "<<result.second[result.second.size() - 1]<<"\n";

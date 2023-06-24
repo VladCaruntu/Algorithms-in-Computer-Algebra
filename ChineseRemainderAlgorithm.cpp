@@ -29,7 +29,7 @@ int ChineseRemainderAlgorithm::chineseRemainderAlgorithm(std::vector<std::pair<i
     int Mi;
     for (size_t i = 0; i < moduli.size(); i++) {
         Mi = M / result[i];
-        ExtendedEuclideanAlgorithm::extendedEuclideanAlgorithm(Mi, result[i], y, z);
+        ExtendedEuclideanAlgorithm::extendedEuclideanAlgorithm(Mi, result[i], y, z, false);
         x += moduli[i] * y * Mi;
     }
 

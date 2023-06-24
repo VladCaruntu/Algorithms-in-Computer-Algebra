@@ -208,13 +208,12 @@ private:
     void processPoly();
     void sortPoly();
     bool isPolyZero(const MultivariatePolynomial&);
-//    int sumOfPowers(const Term&);
     void lexicographicSort();
     void degreeSort();
     void degreeLexicographicSort();
 public:
     int sumOfPowers(const Term&);
-    void SORTING_TEST(const std::string&);
+    void represent(const std::string&);
     std::vector<Term> getTerms() const { return this->terms_;}
     static std::vector<int> getDegree(MultivariatePolynomial&);
     static bool canDivide(const MultivariatePolynomial&, const MultivariatePolynomial&);

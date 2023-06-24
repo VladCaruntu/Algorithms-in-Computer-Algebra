@@ -28,6 +28,9 @@ void FastFourierTransform::FFT(std::vector<std::complex<double>>& a, int inv){
 }
 
 std::vector<int> FastFourierTransform::multiply(std::vector<int> &a, std::vector<int> &b) {
+    auto startTime = std::chrono::high_resolution_clock::now();
+    std::ios_base::sync_with_stdio(false);
+
     int n = 1;
     while (n < a.size() + b.size())
         n *= 2;
@@ -50,5 +53,13 @@ std::vector<int> FastFourierTransform::multiply(std::vector<int> &a, std::vector
     std::vector<int> res(n);
     for (int i = 0; i < n; i++)
         res[i] = round(fa[i].real() / n);
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+    time_taken *= 1e-9;
+        std::cout << "The execution of " << __FUNCTION__ << " took " << std::fixed << time_taken
+        << std::setprecision(10) << " seconds" << std::endl;
+
     return res;
 }

@@ -78,26 +78,28 @@ int main() {
 //    std::cout<<"Reminder: ";
 //    Polynomial::printPoly(reminders[reminders.size() - 1]);
 
+    //If not working, run in debug mode
+
     MultivariatePolynomial mvp1;
     MultivariatePolynomial mvp2;
 
-    Term t1 = Term(boost::rational<int>(1,1), {3,2,4});
-    Term t2 = Term(boost::rational<int>(1,1), {2,1,1});
-    Term t3 = Term(boost::rational<int>(1,1), {1,2,3});
+    Term t1 = Term(boost::rational<int>(3,1), {3,2,4});
+    Term t2 = Term(boost::rational<int>(2,1), {1,1,2});
+    Term t3 = Term(boost::rational<int>(4,1), {0,0,4});
     Term t4 = Term(boost::rational<int>(1,1), {0,1,2});
 
-    Term t5 = Term(boost::rational<int>(1,1), {2,0,1});
-    Term t6 = Term(boost::rational<int>(1,1), {0,1,0});
+    Term t5 = Term(boost::rational<int>(2,1), {1,1,2});
+    Term t6 = Term(boost::rational<int>(1,1), {0,1,1});
     Term t7 = Term(boost::rational<int>(1,1), {0,0,1});
 
     mvp1.addTerm(t1);
     mvp1.addTerm(t2);
     mvp1.addTerm(t3);
-    mvp1.addTerm(t4);
+//    mvp1.addTerm(t4);
 
     mvp2.addTerm(t5);
     mvp2.addTerm(t6);
-    mvp2.addTerm(t7);
+//    mvp2.addTerm(t7);
 
     std::cout<<"P1: "<<mvp1<<std::endl<<"P2: "<<mvp2<<std::endl;
 
